@@ -53,7 +53,7 @@ aurs:
     commit_author:
       name: XanderWatson
       email: saahil_bhavsar@outlook.com
-    private_key: '{{ .Env.AUR_KEY }}'
+    private_key: ${{ secrets.AUR_KEY }}
     git_url: 'ssh://aur@aur.archlinux.org/iitj-autoproxy-bin.git'
     package: |-
       install -Dm755 "./autoproxy" "${pkgdir}/usr/bin/autoproxy"
