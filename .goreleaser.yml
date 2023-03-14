@@ -28,7 +28,7 @@ nfpms:
     bindir: /usr/bin
     contents:
       - src: base_config.json
-        dst: ~/.autoproxy.iitj.json
+        dst: ~/.autoproxy.config.json
       - src: LICENSE
         dst: /usr/share/licenses/iitj-autoproxy/LICENSE
       - src: README.md
@@ -58,5 +58,5 @@ aurs:
     package: |-
       install -Dm755 "./autoproxy" "${pkgdir}/usr/bin/autoproxy"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
-      install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.iitj.json"
+      install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.config.json"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
