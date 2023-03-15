@@ -1,22 +1,21 @@
 builds:
   - binary: autoproxy
     goos:
-     - linux
-     - windows
+      - linux
+      - windows
     goarch:
-     - amd64
-     - arm64
+      - amd64
+      - arm64
     env:
-     - CGO_ENABLED=0
+      - CGO_ENABLED=0
     flags:
-     - -mod=vendor
+      - -mod=vendor
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 nfpms:
-  -
-    package_name: iitj-autoproxy
+  - package_name: iitj-autoproxy
     vendor: XanderWatson
     homepage: https://github.com/XanderWatson/iitj-autoproxy
     maintainer: Saahil Bhavsar <saahil_bhavsar@outlook.com>
@@ -42,8 +41,7 @@ release:
   name_template: "{{.ProjectName}}-v{{.Version}}"
 
 aurs:
-  -
-    name: iitj-autoproxy-bin
+  - name: iitj-autoproxy-bin
     homepage: https://github.com/XanderWatson/iitj-autoproxy
     license: MIT
     maintainers:
@@ -54,9 +52,19 @@ aurs:
       name: XanderWatson
       email: saahil_bhavsar@outlook.com
     private_key: "{{ .Env.AUR_KEY }}"
-    git_url: 'ssh://aur@aur.archlinux.org/iitj-autoproxy-bin.git'
+    git_url: "ssh://aur@aur.archlinux.org/iitj-autoproxy-bin.git"
     package: |-
       install -Dm755 "./autoproxy" "${pkgdir}/usr/bin/autoproxy"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
       install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.config.json"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
+
+archives:
+  - wrap_in_directory: true
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+      - base_config.json
