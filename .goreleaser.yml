@@ -54,13 +54,13 @@ aurs:
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/iitj-autoproxy-bin.git"
     package: |-
-      install -Dm755 "./*/autoproxy" "${pkgdir}/usr/bin/autoproxy"
-      install -Dm644 "./*/LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
-      install -Dm644 "./*/base_config.json" "${pkgdir}~/.autoproxy.config.json"
-      install -Dm644 "./*/README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
+      install -Dm755 "./autoproxy" "${pkgdir}/usr/bin/autoproxy"
+      install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
+      install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.config.json"
+      install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
 
 archives:
-  - wrap_in_directory: true
+  - wrap_in_directory: false
     format_overrides:
       - goos: windows
         format: zip
