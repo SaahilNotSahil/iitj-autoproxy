@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"syscall"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"golang.org/x/term"
 )
 
 func init() {
@@ -19,9 +21,13 @@ var configCmd = &cobra.Command{
 		fmt.Println("Username:")
 		var username string
 		fmt.Scanln(&username)
+
 		fmt.Println("Password:")
-		var password string
-		fmt.Scanln(&password)
+
+		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+		cobra.CheckErr(err)
+
+		password := string(bytePassword)
 
 		viper.Set("username", username)
 		viper.Set("password", password)
