@@ -29,6 +29,7 @@ func schedule(username string, password string) {
 	for i := 0; i < 5; i++ {
 		err := Login(viper.GetString("base_url"), username, password)
 		if err == nil {
+			Logger.Println("Logged in successfully")
 			break
 		} else {
 			Logger.Printf("Attempted login %d", i+1)
@@ -36,6 +37,4 @@ func schedule(username string, password string) {
 
 		time.Sleep(5 * time.Second)
 	}
-
-	Logger.Println("Logged in successfully")
 }
