@@ -10,13 +10,13 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(loginCmd)
+	rootCmd.AddCommand(scheduleCmd)
 }
 
-var loginCmd = &cobra.Command{
-	Use:   "login",
-	Short: "Login to your firewall authentication",
-	Long:  "Login to your firewall authentication",
+var scheduleCmd = &cobra.Command{
+	Use:   "schedule",
+	Short: "Schedule your firewall authentication",
+	Long:  "Schedule your firewall authentication",
 	Run: func(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(viper.ReadInConfig())
 
@@ -28,13 +28,7 @@ var loginCmd = &cobra.Command{
 			log.Println("Please configure the application using the config command")
 		}
 
-		err := pkg.Login(viper.GetString("base_url"), username, password)
-		if err != nil {
-			pkg.Logger.Println("Login failed")
-			log.Fatal("Login failed")
-		} else {
-			pkg.Logger.Println("Login successful")
-			log.Println("Login successful")
-		}
+		go pkg.RunLoginScheduler(username, password)
+		select {}
 	},
 }
