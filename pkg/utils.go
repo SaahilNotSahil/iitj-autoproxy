@@ -39,7 +39,7 @@ func Login(url string, username string, password string) error {
 		magic = strs[0]
 	}
 
-	referer := viper.GetString("login_base_url")+"login?"+token
+	referer := viper.GetString("login_base_url") + "login?" + token
 
 	data := u.Values{}
 	data.Add("4Tredir", referer)
@@ -128,6 +128,30 @@ func GetToken(url string) (string, error) {
 			token = ""
 		}
 	}
+
+	return token, nil
+}
+
+func GetCurrentKeepaliveToken() (string, error) {
+	var token string
+	url := viper.GetString("login_base_url") + "keepalive?" + viper.GetString("token")
+
+	res, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+	bodyString := string(body)
+
+	if strings.Contains(bodyString, "<p><a href=\"https://gateway.iitj.ac.in:1003/logout?") {
+		strs := strings.SplitAfter(bodyString, "<p><a href=\"https://gateway.iitj.ac.in:1003/logout?")
+		strs = strings.Split(strs[1], "\"")
+		token = strs[0]
+	} 
 
 	return token, nil
 }

@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/XanderWatson/iitj-autoproxy/pkg"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	// "github.com/spf13/viper"
 	"log"
 )
 
@@ -16,7 +16,11 @@ var logoutCmd = &cobra.Command{
 	Short: "Logout of your firewall authentication",
 	Long:  "Logout of your firewall authentication",
 	Run: func(cmd *cobra.Command, args []string) {
-		token := viper.GetString("token")
+		token, err := pkg.GetCurrentKeepaliveToken()
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+		}
 
 		if token == "" {
 			pkg.Logger.Println("User not logged in")
