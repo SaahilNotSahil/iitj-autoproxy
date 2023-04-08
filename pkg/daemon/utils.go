@@ -1,4 +1,4 @@
-package pkg
+package daemon
 
 import (
 	"io/ioutil"
@@ -6,7 +6,6 @@ import (
 	"net/http"
 	u "net/url"
 	"strings"
-	"syscall"
 
 	"github.com/spf13/viper"
 )
@@ -98,9 +97,7 @@ func Logout(token string) error {
 		return err
 	}
 
-	pid := viper.GetInt("pid")
-
-	return syscall.Kill(pid, syscall.SIGKILL)
+	return nil
 }
 
 func GetToken(url string) (string, error) {
@@ -140,7 +137,7 @@ func GetCurrentKeepaliveToken() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	
+
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return "", err
@@ -151,7 +148,7 @@ func GetCurrentKeepaliveToken() (string, error) {
 		strs := strings.SplitAfter(bodyString, "<p><a href=\"https://gateway.iitj.ac.in:1003/logout?")
 		strs = strings.Split(strs[1], "\"")
 		token = strs[0]
-	} 
+	}
 
 	return token, nil
 }
