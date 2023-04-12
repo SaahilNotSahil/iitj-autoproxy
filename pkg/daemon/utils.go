@@ -6,6 +6,7 @@ import (
 	"net/http"
 	u "net/url"
 	"strings"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -151,4 +152,20 @@ func GetCurrentKeepaliveToken() (string, error) {
 	}
 
 	return token, nil
+}
+
+func InternetAvailable() bool {
+	url := "https://www.google.com"
+
+	client := http.Client{
+		Timeout: time.Second * 5,
+	}
+
+	resp, err := client.Get(url)
+
+	if err == nil && resp.StatusCode == http.StatusOK {
+		return true
+	}
+
+	return false
 }

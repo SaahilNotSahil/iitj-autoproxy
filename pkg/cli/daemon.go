@@ -6,7 +6,7 @@ import (
 )
 
 func SendCommandToDaemon(command string) error {
-	pipe, err := os.OpenFile("autoproxy", os.O_WRONLY, os.ModeNamedPipe)
+	pipe, err := os.OpenFile("autoproxy-ctd", os.O_WRONLY, os.ModeNamedPipe)
 	if err != nil {
 		log.Fatal("The autoproxy daemon is not running.")
 	}
