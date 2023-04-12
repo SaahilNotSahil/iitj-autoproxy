@@ -27,4 +27,6 @@ func LogoutCmd() {
 
 	pkg.Logger.Println("Logged out successfully")
 	log.Println("Logged out successfully")
+
+	KillScheduler()
 }

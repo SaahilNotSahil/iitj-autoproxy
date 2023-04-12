@@ -13,13 +13,13 @@ func main() {
 	initConfig()
 	cleanup()
 
-	err := syscall.Mkfifo("autoproxy", 0666)
+	err := syscall.Mkfifo("autoproxy-ctd", 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer os.Remove("autoproxy")
+	defer os.Remove("autoproxy-ctd")
 
-	pipe, err := os.OpenFile("autoproxy", os.O_RDONLY, os.ModeNamedPipe)
+	pipe, err := os.OpenFile("autoproxy-ctd", os.O_RDONLY, os.ModeNamedPipe)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -72,7 +72,7 @@ func cleanup() {
 	go func() {
 		<-signal_channel
 
-		os.Remove("autoproxy")
+		os.Remove("autoproxy-ctd")
 		os.Exit(0)
 	}()
 }
