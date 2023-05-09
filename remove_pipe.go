@@ -3,5 +3,5 @@ package main
 import "os"
 
 func main() {
-	os.Remove("autoproxy")
+	os.Remove("autoproxy-ctd")
 }
