@@ -27,7 +27,7 @@ nfpms:
     bindir: /usr/bin
     contents:
       - src: base_config.json
-        dst: ~/.autoproxy.config.json
+        dst: ~/.autoproxy.config
       - src: LICENSE
         dst: /usr/share/licenses/iitj-autoproxy/LICENSE
       - src: README.md

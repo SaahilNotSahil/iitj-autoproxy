@@ -26,7 +26,14 @@ func ping(pingChannel chan bool, kill chan bool) {
 	}
 }
 
-func login(pingChannel chan bool, logChannel chan string, url string, username string, password string, kill chan bool) {
+func login(
+	pingChannel chan bool,
+	logChannel chan string,
+	url string,
+	username string,
+	password string,
+	kill chan bool,
+) {
 	for {
 		select {
 		case <-kill:
@@ -53,7 +60,9 @@ func logToFile(logChannel chan string, kill chan bool) {
 	}
 }
 
-func RunLoginScheduler(url string, username string, password string, kill chan bool) bool {
+func RunLoginScheduler(
+	url string, username string, password string, kill chan bool,
+) bool {
 	if SchedulerRunning {
 		return false
 	}

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/XanderWatson/iitj-autoproxy/pkg/keystore"
 	"github.com/spf13/viper"
 )
 
@@ -50,7 +51,11 @@ func Login(url string, username string, password string) error {
 	client := http.Client{}
 	defer client.CloseIdleConnections()
 
-	req, err := http.NewRequest("POST", viper.GetString("login_base_url"), strings.NewReader(data.Encode()))
+	req, err := http.NewRequest(
+		"POST",
+		viper.GetString("login_base_url"),
+		strings.NewReader(data.Encode()),
+	)
 	if err != nil {
 		return err
 	}
@@ -76,7 +81,9 @@ func Login(url string, username string, password string) error {
 
 	if strings.Contains(bodyString, "keepalive?") {
 		strs := strings.SplitAfter(bodyString, "keepalive?")
-		prefix, found := strings.CutSuffix(strs[1], "\";</script></body></html>")
+		prefix, found := strings.CutSuffix(
+			strs[1], "\";</script></body></html>",
+		)
 
 		if found {
 			token = prefix
@@ -85,9 +92,7 @@ func Login(url string, username string, password string) error {
 		}
 	}
 
-	viper.Set("token", token)
-
-	return viper.WriteConfig()
+	return keystore.Set("token", token)
 }
 
 func Logout(token string) error {
@@ -118,7 +123,9 @@ func GetToken(url string) (string, error) {
 
 	if strings.Contains(bodyString, "fgtauth?") {
 		strs := strings.SplitAfter(bodyString, "fgtauth?")
-		prefix, found := strings.CutSuffix(strs[1], "\";</script></body></html>")
+		prefix, found := strings.CutSuffix(
+			strs[1], "\";</script></body></html>",
+		)
 
 		if found {
 			token = prefix
@@ -145,8 +152,12 @@ func GetCurrentKeepaliveToken() (string, error) {
 	}
 	bodyString := string(body)
 
-	if strings.Contains(bodyString, "<p><a href=\"https://gateway.iitj.ac.in:1003/logout?") {
-		strs := strings.SplitAfter(bodyString, "<p><a href=\"https://gateway.iitj.ac.in:1003/logout?")
+	if strings.Contains(
+		bodyString, "<p><a href=\"https://gateway.iitj.ac.in:1003/logout?",
+	) {
+		strs := strings.SplitAfter(
+			bodyString, "<p><a href=\"https://gateway.iitj.ac.in:1003/logout?",
+		)
 		strs = strings.Split(strs[1], "\"")
 		token = strs[0]
 	}

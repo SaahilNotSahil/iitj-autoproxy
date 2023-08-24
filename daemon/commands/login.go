@@ -6,6 +6,7 @@ import (
 
 	"github.com/XanderWatson/iitj-autoproxy/pkg"
 	"github.com/XanderWatson/iitj-autoproxy/pkg/daemon"
+	"github.com/XanderWatson/iitj-autoproxy/pkg/keystore"
 
 	"github.com/spf13/viper"
 )
@@ -17,11 +18,13 @@ func LoginCmd() {
 		os.Exit(1)
 	}
 
-	username := viper.GetString("username")
-	password := viper.GetString("password")
+	username, _ := keystore.Get("username")
+	password, _ := keystore.Get("password")
 
 	if username == "" || password == "" {
-		pkg.Logger.Println("Please configure the application using the config command")
+		pkg.Logger.Println(
+			"Please configure the application using the config command",
+		)
 		log.Println("Please configure the application using the config command")
 	}
 
