@@ -22,3 +22,5 @@ aur/
 dist/
 
 autoproxy
+
+*.bak

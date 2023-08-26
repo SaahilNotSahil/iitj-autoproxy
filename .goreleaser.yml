@@ -1,11 +1,23 @@
 builds:
-  - binary: autoproxy
+  - main: ./cli
+    id: "cli"
+    binary: ./bin/autoproxy
     goos:
       - linux
-      - windows
     goarch:
       - amd64
-      - arm64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -mod=vendor
+
+  - main: ./daemon
+    id: "daemon"
+    binary: ./bin/autoproxyd
+    goos:
+      - linux
+    goarch:
+      - amd64
     env:
       - CGO_ENABLED=0
     flags:
@@ -26,12 +38,12 @@ nfpms:
     release: "1"
     bindir: /usr/bin
     contents:
-      - src: base_config.json
-        dst: ~/.autoproxy.config
       - src: LICENSE
         dst: /usr/share/licenses/iitj-autoproxy/LICENSE
       - src: README.md
         dst: /usr/share/doc/iitj-autoproxy/README.md
+    scripts:
+      postinstall: ./scripts/postinstall.sh
 
 release:
   prerelease: auto
@@ -39,6 +51,14 @@ release:
     owner: XanderWatson
     name: iitj-autoproxy
   name_template: "{{.ProjectName}}-v{{.Version}}"
+  extra_files:
+    - LICENSE
+    - README.md
+    - base_config.json
+    - build.sh
+    - proxy.sh
+    - remove_pipe.go
+    - scripts/postinstall.sh
 
 aurs:
   - name: iitj-autoproxy-bin
@@ -54,17 +74,8 @@ aurs:
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/iitj-autoproxy-bin.git"
     package: |-
-      install -Dm755 "./autoproxy" "${pkgdir}/usr/bin/autoproxy"
+      install -Dm755 "./bin/autoproxyd" "${pkgdir}/usr/bin/autoproxyd"
+      install -Dm755 "./bin/autoproxy" "${pkgdir}/usr/bin/autoproxy"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
-      install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.config.json"
+      install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
-
-archives:
-  - wrap_in_directory: false
-    format_overrides:
-      - goos: windows
-        format: zip
-    files:
-      - LICENSE
-      - README.md
-      - base_config.json
