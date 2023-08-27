@@ -2,6 +2,6 @@
 
 echo $HOME
 
-cp ../base_config.json $HOME/.autoproxy.config
+cp /etc/iitj-autoproxy/autoproxy.config $HOME/.autoproxy.config
 
 echo "Config file copied to $HOME/.autoproxy.config"

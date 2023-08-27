@@ -42,8 +42,8 @@ nfpms:
         dst: /usr/share/licenses/iitj-autoproxy/LICENSE
       - src: README.md
         dst: /usr/share/doc/iitj-autoproxy/README.md
-      # - src: base_config.json
-      #   dst: ~/.autoproxy.config
+      - src: base_config.json
+        dst: /etc/iitj-autoproxy/autoproxy.config
       - src: ./scripts/proxy.sh
         dst: /usr/bin/autoproxylogin
     scripts:
