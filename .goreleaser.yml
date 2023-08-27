@@ -84,3 +84,14 @@ aurs:
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
       install -Dm644 "./base_config.json" "${pkgdir}/etc/iitj-autoproxy/autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
+
+archives:
+  - wrap_in_directory: false
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - LICENSE
+      - README.md
+      - base_config.json
+      - scripts/*
