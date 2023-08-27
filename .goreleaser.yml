@@ -44,8 +44,14 @@ nfpms:
         dst: /usr/share/doc/iitj-autoproxy/README.md
       - src: base_config.json
         dst: /etc/iitj-autoproxy/autoproxy.config
-      - src: ./scripts/proxy.sh
+      - src: ./scripts/linux/login.sh
         dst: /usr/bin/autoproxylogin
+      - src: ./scripts/linux/daemon-start.sh
+        dst: /usr/bin/autoproxyd-start
+      - src: ./scripts/linux/daemon-stop.sh
+        dst: /usr/bin/autoproxyd-stop
+    scripts:
+      postinstall: ./scripts/linux/daemon-start.sh
 
 release:
   prerelease: auto
@@ -72,7 +78,9 @@ aurs:
     package: |-
       install -Dm755 "./bin/autoproxyd" "${pkgdir}/usr/bin/autoproxyd"
       install -Dm755 "./bin/autoproxy" "${pkgdir}/usr/bin/autoproxy"
-      install -Dm755 "./scripts/proxy.sh" "${pkgdir}/usr/bin/autoproxylogin"
+      install -Dm755 "./scripts/linux/login.sh" "${pkgdir}/usr/bin/autoproxylogin"
+      install -Dm755 "./scripts/linux/daemon-start.sh" "${pkgdir}/usr/bin/autoproxyd-start"
+      install -Dm755 "./scripts/linux/daemon-stop.sh" "${pkgdir}/usr/bin/autoproxyd-stop"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
       install -Dm644 "./base_config.json" "${pkgdir}/etc/iitj-autoproxy/autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
