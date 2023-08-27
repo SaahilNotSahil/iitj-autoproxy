@@ -2,26 +2,26 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	// "github.com/spf13/viper"
 
-	"os"
+	// "os"
 )
 
-func initConfig() {
-	home, err := os.UserHomeDir()
-	cobra.CheckErr(err)
+// func initConfig() {
+// 	home, err := os.UserHomeDir()
+// 	cobra.CheckErr(err)
 
-	viper.AddConfigPath(home)
+// 	viper.AddConfigPath(home)
 
-	viper.SetConfigType("json")
-	viper.SetConfigName(".autoproxy.config")
+// 	viper.SetConfigType("json")
+// 	viper.SetConfigName(".autoproxy.config")
 
-	cobra.CheckErr(viper.ReadInConfig())
-}
+// 	cobra.CheckErr(viper.ReadInConfig())
+// }
 
-func init() {
-	cobra.OnInitialize(initConfig)
-}
+// func init() {
+// 	cobra.OnInitialize(initConfig)
+// }
 
 var rootCmd = &cobra.Command{
 	Use:   "autoproxy",
