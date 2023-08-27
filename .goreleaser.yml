@@ -52,13 +52,13 @@ release:
     name: iitj-autoproxy
   name_template: "{{.ProjectName}}-v{{.Version}}"
   extra_files:
-    - LICENSE
-    - README.md
-    - base_config.json
-    - build.sh
-    - proxy.sh
-    - remove_pipe.go
-    - scripts/postinstall.sh
+    - glob: ./LICENSE
+    - glob: ./README.md
+    - glob: ./base_config.json
+    - glob: ./build.sh
+    - glob: ./proxy.sh
+    - glob: ./remove_pipe.go
+    - glob: ./scripts/postinstall.sh
 
 aurs:
   - name: iitj-autoproxy-bin
