@@ -36,14 +36,18 @@ nfpms:
       - deb
       - archlinux
     release: "1"
-    bindir: /usr/bin
+    bindir: /usr
     contents:
       - src: LICENSE
         dst: /usr/share/licenses/iitj-autoproxy/LICENSE
       - src: README.md
         dst: /usr/share/doc/iitj-autoproxy/README.md
-    scripts:
-      postinstall: ./scripts/postinstall.sh
+      - src: base_config.json
+        dst: ~/.autoproxy.config
+      - src: proxy.sh
+        dst: /usr/bin/autoproxylogin
+    # scripts:
+    #   postinstall: ./scripts/postinstall.sh
 
 release:
   prerelease: auto
@@ -52,13 +56,7 @@ release:
     name: iitj-autoproxy
   name_template: "{{.ProjectName}}-v{{.Version}}"
   extra_files:
-    - glob: ./LICENSE
-    - glob: ./README.md
     - glob: ./base_config.json
-    - glob: ./build.sh
-    - glob: ./proxy.sh
-    - glob: ./remove_pipe.go
-    - glob: ./scripts/postinstall.sh
 
 aurs:
   - name: iitj-autoproxy-bin
@@ -76,6 +74,7 @@ aurs:
     package: |-
       install -Dm755 "./bin/autoproxyd" "${pkgdir}/usr/bin/autoproxyd"
       install -Dm755 "./bin/autoproxy" "${pkgdir}/usr/bin/autoproxy"
+      install -Dm755 "./proxy.sh" "${pkgdir}/usr/bin/autoproxylogin"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
       install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
