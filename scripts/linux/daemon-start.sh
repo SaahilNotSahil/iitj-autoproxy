@@ -2,7 +2,9 @@
 
 # This script is used to start the daemon
 
-/usr/bin/autoproxyd > /dev/null 2>&1 &
+TARGET_USER=$(who | awk '{if ($1 != "root") print $1; exit;}')
+
+su - $TARGET_USER -c /usr/bin/autoproxyd > /dev/null 2>&1 &
 
 APP_PID=$!
 
