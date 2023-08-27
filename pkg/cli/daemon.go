@@ -3,10 +3,14 @@ package cli
 import (
 	"log"
 	"os"
+
+	"github.com/XanderWatson/iitj-autoproxy/pkg"
 )
 
 func SendCommandToDaemon(command string) error {
-	pipe, err := os.OpenFile("autoproxy-ctd", os.O_WRONLY, os.ModeNamedPipe)
+	pipe, err := os.OpenFile(
+		pkg.GetCTDNamedPipe(), os.O_WRONLY, os.ModeNamedPipe,
+	)
 	if err != nil {
 		log.Fatal("The autoproxy daemon is not running.")
 	}

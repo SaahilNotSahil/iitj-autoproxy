@@ -1,25 +1,33 @@
 package main
 
 import (
-	"github.com/XanderWatson/iitj-autoproxy/daemon/commands"
-	"github.com/spf13/viper"
+	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
+
+	"github.com/spf13/viper"
+
+	"github.com/XanderWatson/iitj-autoproxy/daemon/commands"
+	"github.com/XanderWatson/iitj-autoproxy/pkg"
 )
 
 func main() {
 	initConfig()
 	cleanup()
 
-	err := syscall.Mkfifo("autoproxy-ctd", 0666)
+	pipePath := pkg.GetCTDNamedPipe()
+
+	err := syscall.Mkfifo(pipePath, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer os.Remove("autoproxy-ctd")
+	defer os.Remove(pipePath)
 
-	pipe, err := os.OpenFile("autoproxy-ctd", os.O_RDONLY, os.ModeNamedPipe)
+	pipe, err := os.OpenFile(pipePath, os.O_RDONLY, os.ModeNamedPipe)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,14 +62,32 @@ func initConfig() {
 		log.Fatal(err)
 	}
 
+	var baseConfigPath string
+
+	if runtime.GOOS == "linux" {
+		baseConfigPath = "/etc/iitj-autoproxy/autoproxy.config"
+	} else {
+		baseConfigPath = ""
+	}
+
+	configName := ".autoproxy.config"
+
 	viper.AddConfigPath(home)
 
 	viper.SetConfigType("json")
-	viper.SetConfigName(".autoproxy.config")
+	viper.SetConfigName(configName)
 
 	err = viper.ReadInConfig()
 	if err != nil {
-		log.Fatal(err)
+		_, err = copy(baseConfigPath, home+"/"+configName)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = viper.ReadInConfig()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
@@ -69,10 +95,37 @@ func cleanup() {
 	signal_channel := make(chan os.Signal, 1)
 	signal.Notify(signal_channel, syscall.SIGINT, syscall.SIGTERM)
 
+	pipePath := pkg.GetCTDNamedPipe()
+
 	go func() {
 		<-signal_channel
 
-		os.Remove("autoproxy-ctd")
+		os.Remove(pipePath)
 		os.Exit(0)
 	}()
+}
+
+func copy(src, dst string) (int64, error) {
+	sourceFileStat, err := os.Stat(src)
+	if err != nil {
+		return 0, err
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		return 0, fmt.Errorf("%s is not a regular file", src)
+	}
+
+	source, err := os.Open(src)
+	if err != nil {
+		return 0, err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return 0, err
+	}
+	defer destination.Close()
+
+	return io.Copy(destination, source)
 }

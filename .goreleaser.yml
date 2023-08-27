@@ -46,8 +46,6 @@ nfpms:
         dst: /etc/iitj-autoproxy/autoproxy.config
       - src: ./scripts/proxy.sh
         dst: /usr/bin/autoproxylogin
-    scripts:
-      postinstall: ./scripts/postinstall.sh
 
 release:
   prerelease: auto
@@ -76,5 +74,5 @@ aurs:
       install -Dm755 "./bin/autoproxy" "${pkgdir}/usr/bin/autoproxy"
       install -Dm755 "./scripts/proxy.sh" "${pkgdir}/usr/bin/autoproxylogin"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
-      install -Dm644 "./base_config.json" "${pkgdir}~/.autoproxy.config"
+      install -Dm644 "./base_config.json" "${pkgdir}/etc/iitj-autoproxy/autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"

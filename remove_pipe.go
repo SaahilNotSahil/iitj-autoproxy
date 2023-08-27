@@ -3,5 +3,12 @@ package main
 import "os"
 
 func main() {
-	os.Remove("autoproxy-ctd")
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	pipePath := homeDir + "/autoproxy-ctd"
+
+	os.Remove(pipePath)
 }
