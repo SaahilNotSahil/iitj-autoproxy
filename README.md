@@ -10,7 +10,7 @@ A CLI tool to automatically login to IIT Jodhpur's network firewall.
 - Run the following commands to install the package:
 
 ```
-$ curl -s https://packagecloud.io/install/repositories/XanderWatson/iitj-autoproxy/script.deb.sh | sudo bash
+$ curl -s https://packagecloud.io/install/repositories/XanderWatson/iitj-autoproxy/script.deb.sh?any=true | sudo bash
 $ sudo apt update
 $ sudo apt install iitj-autoproxy
 ```
