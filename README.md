@@ -1,4 +1,4 @@
-# IITJ Autoproxy
+# IITJ Autoproxy (v0.1.0)
 
 A CLI tool to automatically login to IIT Jodhpur's network firewall.
 
