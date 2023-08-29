@@ -18,7 +18,7 @@ su - $TARGET_USER -c /usr/bin/autoproxyd > /dev/null 2>&1 &
 APP_PID=$!
 
 # Write the PID to a file
-echo $APP_PID > /run/autoproxyd.pid
+echo $APP_PID > /var/run/autoproxyd.pid
 
 # Disown the PID
 disown $APP_PID

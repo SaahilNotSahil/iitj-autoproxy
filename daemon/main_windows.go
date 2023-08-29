@@ -1,3 +1,6 @@
+//go:build windows
+// +build windows
+
 package main
 
 import (
@@ -6,10 +9,10 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 
 	"github.com/spf13/viper"
+	"gopkg.in/natefinch/npipe.v2"
 
 	"github.com/XanderWatson/iitj-autoproxy/daemon/commands"
 	"github.com/XanderWatson/iitj-autoproxy/pkg"
@@ -21,21 +24,26 @@ func main() {
 
 	pipePath := pkg.GetCTDNamedPipe()
 
-	err := syscall.Mkfifo(pipePath, 0666)
+	ln, err := npipe.Listen(pipePath)
 	if err != nil {
+		pkg.Logger.Println(err)
 		log.Fatal(err)
 	}
-	defer os.Remove(pipePath)
-
-	pipe, err := os.OpenFile(pipePath, os.O_RDONLY, os.ModeNamedPipe)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer pipe.Close()
 
 	buf := make([]byte, 1024)
 	for {
-		num_bytes, _ := pipe.Read(buf)
+		conn, err := ln.Accept()
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Fatal(err)
+		}
+
+		num_bytes, err := conn.Read(buf)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Fatal(err)
+		}
+
 		command := string(buf[:num_bytes])
 
 		if num_bytes > 0 {
@@ -53,22 +61,21 @@ func execute(command string) {
 		commands.LogoutCmd()
 	case "schedule":
 		commands.ScheduleCmd()
+	case "hc":
+		commands.HealthCheckCmd()
 	}
 }
 
 func initConfig() {
 	home, err := os.UserHomeDir()
 	if err != nil {
+		pkg.Logger.Println(err)
 		log.Fatal(err)
 	}
 
-	var baseConfigPath string
+	// TODO
 
-	if runtime.GOOS == "linux" {
-		baseConfigPath = "/etc/iitj-autoproxy/autoproxy.config"
-	} else {
-		baseConfigPath = ""
-	}
+	baseConfigPath := "autoproxy.config"
 
 	configName := ".autoproxy.config"
 
@@ -79,13 +86,18 @@ func initConfig() {
 
 	err = viper.ReadInConfig()
 	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
 		_, err = copy(baseConfigPath, home+"/"+configName)
 		if err != nil {
+			pkg.Logger.Println(err)
 			log.Fatal(err)
 		}
 
 		err = viper.ReadInConfig()
 		if err != nil {
+			pkg.Logger.Println(err)
 			log.Fatal(err)
 		}
 	}

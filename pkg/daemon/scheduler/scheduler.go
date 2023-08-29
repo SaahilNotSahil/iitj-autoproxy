@@ -21,7 +21,7 @@ func ping(pingChannel chan bool, kill chan bool) {
 				pingChannel <- internet
 			}
 
-			time.Sleep(2 * time.Second)
+			time.Sleep(5 * time.Second)
 		}
 	}
 }

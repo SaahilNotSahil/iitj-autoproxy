@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/XanderWatson/iitj-autoproxy/pkg/cli"
 
 	"github.com/spf13/cobra"
@@ -16,5 +18,6 @@ var loginCmd = &cobra.Command{
 	Long:  "Login to your firewall authentication",
 	Run: func(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(cli.SendCommandToDaemon("login"))
+		fmt.Println(cli.CreateNamedPipeAndReceiveMessage(false))
 	},
 }
