@@ -73,9 +73,7 @@ func initConfig() {
 		log.Fatal(err)
 	}
 
-	// TODO
-
-	baseConfigPath := "autoproxy.config"
+	baseConfigPath := "C:/ProgramData/IITJ Autoproxy/autoproxy.config"
 
 	configName := ".autoproxy.config"
 
