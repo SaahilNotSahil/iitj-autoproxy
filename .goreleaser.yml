@@ -107,27 +107,27 @@ aurs:
       install -Dm644 "./autoproxy.config" "${pkgdir}/etc/iitj-autoproxy/autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
 
-chocolateys:
-  - name: iitj-autoproxy
-    owners: Saahil Bhavsar
-    title: IITJ Autoproxy
-    authors: Saahil Bhavsar
-    project_url: https://github.com/XanderWatson/iitj-autoproxy
-    url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    copyright: 2023 Saahil Bhavsar
-    license_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/LICENSE
-    require_license_acceptance: false
-    project_source_url: https://github.com/XanderWatson/iitj-autoproxy
-    docs_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/README.md
-    bug_tracker_url: https://github.com/XanderWatson/iitj-autoproxy/issues
-    summary: A CLI tool to automatically login to IIT Jodhpur's network firewall.
-    description: |
-      IITJ Autoproxy installer package.
-      A CLI tool to automatically login to IIT Jodhpur's network firewall.
-    release_notes: "https://github.com/XanderWatson/iitj-autoproxy/releases/tag/v{{ .Version }}"
-    api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
-    source_repo: "https://push.chocolatey.org/"
-    skip_publish: false
+# chocolateys:
+#   - name: iitj-autoproxy
+#     owners: Saahil Bhavsar
+#     title: IITJ Autoproxy
+#     authors: Saahil Bhavsar
+#     project_url: https://github.com/XanderWatson/iitj-autoproxy
+#     url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+#     copyright: 2023 Saahil Bhavsar
+#     license_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/LICENSE
+#     require_license_acceptance: false
+#     project_source_url: https://github.com/XanderWatson/iitj-autoproxy
+#     docs_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/README.md
+#     bug_tracker_url: https://github.com/XanderWatson/iitj-autoproxy/issues
+#     summary: A CLI tool to automatically login to IIT Jodhpur's network firewall.
+#     description: |
+#       IITJ Autoproxy installer package.
+#       A CLI tool to automatically login to IIT Jodhpur's network firewall.
+#     release_notes: "https://github.com/XanderWatson/iitj-autoproxy/releases/tag/v{{ .Version }}"
+#     api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
+#     source_repo: "https://push.chocolatey.org/"
+#     skip_publish: false
 
 archives:
   - wrap_in_directory: false
