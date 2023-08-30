@@ -145,3 +145,5 @@ archives:
       - README.md
       - autoproxy.config
       - scripts/*
+      - install.ps1
+      - uninstall.ps1
