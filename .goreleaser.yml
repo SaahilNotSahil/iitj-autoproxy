@@ -21,6 +21,9 @@ builds:
         {{- end }}
     flags:
       - -mod=vendor
+    ignore:
+      - goos: windows
+        goarch: arm64
 
   - main: ./daemon
     id: "daemon"
