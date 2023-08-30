@@ -25,7 +25,7 @@ func CreateNamedPipeAndReceiveMessage(isHealthCheck bool) string {
 	}
 	defer os.Remove(pipeName)
 
-	pipe, err := os.OpenFile(pipename, os.O_RDONLY, os.ModeNamedPipe)
+	pipe, err := os.OpenFile(pipeName, os.O_RDONLY, os.ModeNamedPipe)
 	if err != nil {
 		if isHealthCheck {
 			return "Unhealthy"
