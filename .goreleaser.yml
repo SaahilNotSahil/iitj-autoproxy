@@ -127,7 +127,7 @@ chocolateys:
     release_notes: "https://github.com/XanderWatson/iitj-autoproxy/releases/tag/v{{ .Version }}"
     api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
     source_repo: "https://push.chocolatey.org/"
-    skip_publish: true
+    skip_publish: false
 
 archives:
   - wrap_in_directory: false
