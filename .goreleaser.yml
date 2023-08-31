@@ -149,7 +149,8 @@ archives:
       - autoproxy-uninstall.ps1
 
 brews:
-  - name: iitj-autoproxy
+  - 
+    name: iitj-autoproxy
     alternative_names:
       - iitj-autoproxy@{{ .Version }}
     url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
