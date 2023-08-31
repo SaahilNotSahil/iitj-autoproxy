@@ -22,6 +22,7 @@ if (-Not (Test-Path $configInstallDir)) {
 
 # Copy binaries
 Copy-Item -Path "$binDir\*" -Destination $installDir -Force
+Copy-Item -Path "$configDir\uninstall.ps1" -Destination $installDir -Force
 
 # Copy example config, README, and LICENSE to config folder
 Copy-Item -Path "$configDir\autoproxy.config" -Destination $configInstallDir -Force
