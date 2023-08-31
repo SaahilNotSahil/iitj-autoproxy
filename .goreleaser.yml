@@ -162,10 +162,12 @@ brews:
     license: "MIT"
     skip_upload: false
     install: |
-      bin.install "autoproxy"
-      bin.install "autoproxyd"
+      bin.install "bin/autoproxy"
+      bin.install "bin/autoproxyd"
     post_install: |
         etc.install "autoproxy.config"
+        etc.install "LICENSE"
+        etc.install "README.md"
     repository:
       owner: XanderWatson
       name: homebrew-iitj-autoproxy
