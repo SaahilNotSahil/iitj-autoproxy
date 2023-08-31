@@ -8,6 +8,7 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 # Define directories
 $installDir = "C:\Program Files\IITJ Autoproxy"
 $configInstallDir = "C:\ProgramData\IITJ Autoproxy"
+$homeDir = $env:USERPROFILE
 
 # Remove binaries
 if (Test-Path $installDir) {
@@ -21,9 +22,13 @@ if (Test-Path $configInstallDir) {
     Remove-Item -Path $configInstallDir -Force
 }
 
+if (Test-Path $homeDir) {
+    Remove-Item -Path "$homeDir\.autoproxy.*" -Force
+}
+
 # Remove from PATH environment variable
 $envPath = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
 $newEnvPath = ($envPath.Split(';') | Where-Object { $_ -ne $installDir }) -join ';'
 [Environment]::SetEnvironmentVariable("Path", $newEnvPath, [EnvironmentVariableTarget]::Machine)
 
-Write-Host "Uninstallation completed successfully!"
+Write-Host "Uninstallation of IITJ Autoproxy completed successfully!"
