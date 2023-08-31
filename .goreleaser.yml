@@ -10,7 +10,7 @@ builds:
       - amd64
       - arm64
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
       - >-
         {{- if eq .Os "darwin" }}
           {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
@@ -24,6 +24,8 @@ builds:
     ignore:
       - goos: windows
         goarch: arm64
+      - goos: darwin
+        goarch: amd64
 
   - main: ./daemon
     id: "daemon"
@@ -36,7 +38,7 @@ builds:
       - amd64
       - arm64
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
       - >-
         {{- if eq .Os "darwin" }}
           {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
@@ -50,6 +52,8 @@ builds:
     ignore:
       - goos: windows
         goarch: arm64
+      - goos: darwin
+        goarch: amd64
 
 checksum:
   name_template: "checksums.txt"
