@@ -147,3 +147,34 @@ archives:
       - scripts/*
       - install.ps1
       - autoproxy-uninstall.ps1
+
+brews:
+  - name: iitj-autoproxy
+    alternative_names:
+      - iitj-autoproxy@{{ .Version }}
+    url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    download_strategy: CurlDownloadStrategy
+    commit_author:
+      name: XanderWatson
+      email: saahil_bhavsar@outlook.com
+    commit_msg_template: "Brew formula update for iitj-autoproxy version {{ .Tag }}"
+    folder: homebrew-formula
+    caveats: "How to use this binary"
+    homepage: "https://github.com/XanderWatson/iitj-autoproxy"
+    description: "A CLI tool to automatically login to IIT Jodhpur's network firewall."
+    license: "MIT"
+    skip_upload: false
+    install: |
+      bin.install "autoproxy"
+      bin.install "autoproxyd"
+    post_install: |
+        etc.install "autoproxy.config"
+    repository:
+      owner: XanderWatson
+      name: homebrew-iitj-autoproxy
+      branch: main
+      pull_request:
+        enabled: false
+      git:
+        url: 'ssh://git@github.com:homebrew-iitj-autoproxy.git'
+        private_key: '{{ .Env.PRIVATE_KEY_PATH }}'
