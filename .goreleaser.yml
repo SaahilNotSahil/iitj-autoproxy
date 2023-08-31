@@ -173,6 +173,3 @@ brews:
       branch: main
       pull_request:
         enabled: false
-      git:
-        url: 'ssh://git@github.com:homebrew-iitj-autoproxy.git'
-        private_key: '{{ .Env.PRIVATE_KEY_PATH }}'
