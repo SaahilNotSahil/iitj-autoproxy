@@ -146,4 +146,4 @@ archives:
       - autoproxy.config
       - scripts/*
       - install.ps1
-      - uninstall.ps1
+      - autoproxy-uninstall.ps1
