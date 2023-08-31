@@ -4,24 +4,52 @@ builds:
     binary: ./bin/autoproxy
     goos:
       - linux
+      - windows
+      - darwin
     goarch:
       - amd64
+      - arm64
     env:
       - CGO_ENABLED=0
+      - >-
+        {{- if eq .Os "darwin" }}
+          {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
+          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
+        {{- end }}
+        {{- if eq .Os "windows" }}
+          {{- if eq .Arch "amd64" }}CC=x86_64-w64-mingw32-gcc{{- end }}
+        {{- end }}
     flags:
       - -mod=vendor
+    ignore:
+      - goos: windows
+        goarch: arm64
 
   - main: ./daemon
     id: "daemon"
     binary: ./bin/autoproxyd
     goos:
       - linux
+      - windows
+      - darwin
     goarch:
       - amd64
+      - arm64
     env:
       - CGO_ENABLED=0
+      - >-
+        {{- if eq .Os "darwin" }}
+          {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
+          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
+        {{- end }}
+        {{- if eq .Os "windows" }}
+          {{- if eq .Arch "amd64" }}CC=x86_64-w64-mingw32-gcc{{- end }}
+        {{- end }}
     flags:
       - -mod=vendor
+    ignore:
+      - goos: windows
+        goarch: arm64
 
 checksum:
   name_template: "checksums.txt"
@@ -42,7 +70,7 @@ nfpms:
         dst: /usr/share/licenses/iitj-autoproxy/LICENSE
       - src: README.md
         dst: /usr/share/doc/iitj-autoproxy/README.md
-      - src: base_config.json
+      - src: autoproxy.config
         dst: /etc/iitj-autoproxy/autoproxy.config
       - src: ./scripts/linux/login.sh
         dst: /usr/bin/autoproxylogin
@@ -60,7 +88,7 @@ release:
     name: iitj-autoproxy
   name_template: "{{.ProjectName}}-v{{.Version}}"
   extra_files:
-    - glob: ./base_config.json
+    - glob: autoproxy.config
 
 aurs:
   - name: iitj-autoproxy-bin
@@ -82,8 +110,30 @@ aurs:
       install -Dm755 "./scripts/linux/daemon-start.sh" "${pkgdir}/usr/bin/autoproxyd-start"
       install -Dm755 "./scripts/linux/daemon-stop.sh" "${pkgdir}/usr/bin/autoproxyd-stop"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
-      install -Dm644 "./base_config.json" "${pkgdir}/etc/iitj-autoproxy/autoproxy.config"
+      install -Dm644 "./autoproxy.config" "${pkgdir}/etc/iitj-autoproxy/autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
+
+# chocolateys:
+#   - name: iitj-autoproxy
+#     owners: Saahil Bhavsar
+#     title: IITJ Autoproxy
+#     authors: Saahil Bhavsar
+#     project_url: https://github.com/XanderWatson/iitj-autoproxy
+#     url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+#     copyright: 2023 Saahil Bhavsar
+#     license_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/LICENSE
+#     require_license_acceptance: false
+#     project_source_url: https://github.com/XanderWatson/iitj-autoproxy
+#     docs_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/README.md
+#     bug_tracker_url: https://github.com/XanderWatson/iitj-autoproxy/issues
+#     summary: A CLI tool to automatically login to IIT Jodhpur's network firewall.
+#     description: |
+#       IITJ Autoproxy installer package.
+#       A CLI tool to automatically login to IIT Jodhpur's network firewall.
+#     release_notes: "https://github.com/XanderWatson/iitj-autoproxy/releases/tag/v{{ .Version }}"
+#     api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
+#     source_repo: "https://push.chocolatey.org/"
+#     skip_publish: false
 
 archives:
   - wrap_in_directory: false
@@ -93,5 +143,7 @@ archives:
     files:
       - LICENSE
       - README.md
-      - base_config.json
+      - autoproxy.config
       - scripts/*
+      - install.ps1
+      - autoproxy-uninstall.ps1

@@ -31,6 +31,7 @@ func Login(url string, username string, password string) error {
 	if err != nil {
 		return err
 	}
+
 	bodyString := string(body)
 
 	magicStr := "name=\"magic\" value=\""
@@ -119,6 +120,7 @@ func GetToken(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	bodyString := string(body)
 
 	if strings.Contains(bodyString, "fgtauth?") {
@@ -139,6 +141,7 @@ func GetToken(url string) (string, error) {
 
 func GetCurrentKeepaliveToken() (string, error) {
 	var token string
+
 	url := viper.GetString("login_base_url") + "keepalive?" + viper.GetString("token")
 
 	res, err := http.Get(url)

@@ -2,7 +2,6 @@ package commands
 
 import (
 	"log"
-	"os"
 
 	"github.com/XanderWatson/iitj-autoproxy/pkg"
 	"github.com/XanderWatson/iitj-autoproxy/pkg/daemon"
@@ -14,26 +13,97 @@ import (
 func LoginCmd() {
 	err := viper.ReadInConfig()
 	if err != nil {
-		pkg.Logger.Println("Error reading config file")
-		os.Exit(1)
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		err = daemon.SendMessageToCLI(
+			"Error reading config file. Please make sure the file exists and is valid",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
 	}
 
-	username, _ := keystore.Get("username")
-	password, _ := keystore.Get("password")
+	username, err := keystore.Get("username")
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		err = daemon.SendMessageToCLI(
+			"Error fetching the username from the OS keyring",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
+	}
+
+	password, err := keystore.Get("password")
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		err = daemon.SendMessageToCLI(
+			"Error fetching the password from the OS keyring",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
+	}
 
 	if username == "" || password == "" {
 		pkg.Logger.Println(
 			"Please configure the application using the config command",
 		)
-		log.Println("Please configure the application using the config command")
+		log.Println(
+			"Please configure the application using the config command",
+		)
+
+		err = daemon.SendMessageToCLI(
+			"Please configure the application using the config command",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
 	}
 
 	err = daemon.Login(viper.GetString("base_url"), username, password)
 	if err != nil {
-		pkg.Logger.Println("Login failed")
-		log.Fatal("Login failed")
-	}
+		pkg.Logger.Println(err)
+		log.Println(err)
 
-	pkg.Logger.Println("Login successful")
-	log.Println("Login successful")
+		err = daemon.SendMessageToCLI("Login failed")
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+		}
+	} else {
+		pkg.Logger.Println("Login successful")
+		log.Println("Login successful")
+
+		err = daemon.SendMessageToCLI("Login successful")
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+		}
+	}
 }

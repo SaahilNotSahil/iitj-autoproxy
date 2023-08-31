@@ -7,13 +7,13 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Check if PID file exists
-if [ ! -f /run/autoproxyd.pid ]; then
+if [ ! -f /var/run/autoproxyd.pid ]; then
     echo "PID file not found. Is the daemon running?"
     exit 1
 fi
 
 # Read PID from file
-APP_PID=$(cat /run/autoproxyd.pid)
+APP_PID=$(cat /var/run/autoproxyd.pid)
 
 # Check if the PID is actually running
 if ! ps -p $APP_PID > /dev/null; then
@@ -24,7 +24,7 @@ fi
 # Kill the process
 if kill $APP_PID; then
     echo "Successfully terminated process with PID $APP_PID."
-    rm /run/autoproxyd.pid
+    rm /var/run/autoproxyd.pid
 else
     echo "Failed to terminate process with PID $APP_PID."
     exit 1

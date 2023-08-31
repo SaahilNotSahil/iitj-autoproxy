@@ -1,10 +1,22 @@
-# IITJ Autoproxy (v0.1.0)
+# IITJ Autoproxy (v0.1.1)
 
 A CLI tool to automatically login to IIT Jodhpur's network firewall.
 
-#### (Currently only supports Linux)
+#### (Currently only supports Windows and Linux)
 
 ### Installation 
+
+#### Windows:
+
+- Download the latest release from [here](https://github.com/XanderWatson/iitj-autoproxy/releases).
+- Unzip the file and open a powershell instance with administrator privileges in the unzipped directory:
+- Run the following script to install autoproxy:
+
+```
+.\install.ps1
+```
+
+This will install the autoproxy CLI and daemon in "C:\Program Files\IITJ Autoproxy\" and also add it to the PATH environmment variable.
 
 #### Debian-based Linux Distributions:
 - Run the following commands to install the package:

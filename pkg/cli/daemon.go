@@ -12,6 +12,7 @@ func SendCommandToDaemon(command string) error {
 		pkg.GetCTDNamedPipe(), os.O_WRONLY, os.ModeNamedPipe,
 	)
 	if err != nil {
+		pkg.Logger.Println(err)
 		log.Fatal("The autoproxy daemon is not running.")
 	}
 	defer pipe.Close()
