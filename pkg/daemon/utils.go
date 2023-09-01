@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg/keystore"
 	"github.com/spf13/viper"
 )
 
@@ -93,7 +92,9 @@ func Login(url string, username string, password string) error {
 		}
 	}
 
-	return keystore.Set("token", token)
+	viper.Set("token", token)
+
+	return nil
 }
 
 func Logout(token string) error {

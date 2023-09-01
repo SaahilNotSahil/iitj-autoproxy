@@ -1,6 +1,8 @@
 package keystore
 
 import (
+	"log"
+
 	"github.com/99designs/keyring"
 )
 
@@ -9,6 +11,8 @@ var kr keyring.Keyring
 func init() {
 	kr, _ = keyring.Open(keyring.Config{
 		ServiceName: "iitj-autoproxy",
+		KeyCtlScope: "user",
+		KeyCtlPerm: 0600,
 	})
 }
 
@@ -39,12 +43,20 @@ func Keys() ([]string, error) {
 func Reset() error {
 	keys, err := kr.Keys()
 	if err != nil {
+		log.Println(err)
+
 		return err
 	}
 
+	log.Println(keys)
+
 	for _, key := range keys {
+		log.Println("Removing key: ", key)
+
 		err := kr.Remove(key)
 		if err != nil {
+			log.Println(err)
+
 			return err
 		}
 	}

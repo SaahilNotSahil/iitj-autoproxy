@@ -29,13 +29,41 @@ func LoginCmd() {
 		return
 	}
 
-	username, err := keystore.Get("username")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
+	var username string
+	var password string
+
+	keys, _ := keystore.Keys()
+	log.Println(keys)
+
+	if len(keys) == 1 {
+		username = keys[0]
+		password, err = keystore.Get(username)
+		if err != nil || password == "" {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			err = daemon.SendMessageToCLI(
+				"Error fetching the password from the OS keyring",
+			)
+			if err != nil {
+				pkg.Logger.Println(err)
+				log.Println(err)
+
+				return
+			}
+
+			return
+		}
+	} else if len(keys) == 0 {
+		pkg.Logger.Println(
+			"Please configure the application using the config command",
+		)
+		log.Println(
+			"Please configure the application using the config command",
+		)
 
 		err = daemon.SendMessageToCLI(
-			"Error fetching the username from the OS keyring",
+			"Please configure the application using the config command",
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -45,27 +73,25 @@ func LoginCmd() {
 		}
 
 		return
-	}
-
-	password, err := keystore.Get("password")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
-
-		err = daemon.SendMessageToCLI(
-			"Error fetching the password from the OS keyring",
-		)
+	} else {
+		err := keystore.Reset()
 		if err != nil {
 			pkg.Logger.Println(err)
 			log.Println(err)
 
+			err = daemon.SendMessageToCLI(
+				"Error resetting the OS keyring",
+			)
+			if err != nil {
+				pkg.Logger.Println(err)
+				log.Println(err)
+
+				return
+			}
+
 			return
 		}
 
-		return
-	}
-
-	if username == "" || password == "" {
 		pkg.Logger.Println(
 			"Please configure the application using the config command",
 		)
