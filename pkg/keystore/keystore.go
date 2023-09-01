@@ -9,8 +9,6 @@ var kr keyring.Keyring
 func init() {
 	kr, _ = keyring.Open(keyring.Config{
 		ServiceName: "iitj-autoproxy",
-		KeyCtlScope: "user",
-		FileDir:    "~/.config/iitj-autoproxy",
 	})
 }
 

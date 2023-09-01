@@ -7,11 +7,7 @@ builds:
     goarch:
       - arm64
     env:
-      - CGO_ENABLED=0
-      - >-
-        {{- if eq .Os "darwin" }}
-          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
-        {{- end }}
+      - CGO_ENABLED=1
     flags:
       - -mod=vendor
 
@@ -23,11 +19,7 @@ builds:
     goarch:
       - arm64
     env:
-      - CGO_ENABLED=0
-      - >-
-        {{- if eq .Os "darwin" }}
-          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
-        {{- end }}
+      - CGO_ENABLED=1
     flags:
       - -mod=vendor
 
@@ -67,6 +59,9 @@ brews:
     install: |
       bin.install "bin/autoproxy"
       bin.install "bin/autoproxyd"
+      bin.install "scripts/darwin/daemon-start.sh"
+      bin.install "scripts/darwin/daemon-stop.sh"
+      bin.install "scripts/darwin/login.sh"
     post_install: |
         etc.install "autoproxy.config"
         etc.install "LICENSE"
