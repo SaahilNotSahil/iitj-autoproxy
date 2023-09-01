@@ -4,6 +4,8 @@ A CLI tool to automatically login to IIT Jodhpur's network firewall.
 
 Supports Windows, Debian-based Linux distributions, Arch-based Linux distributions and MacOS.
 
+## Note: OS keyring issues on MacOS. Please refrain from using this on MacOS until the issues are fixed.
+
 ### Installation 
 
 #### Windows:
