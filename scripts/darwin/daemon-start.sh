@@ -12,7 +12,7 @@ fi
 TARGET_USER=$(who | awk '{if ($1 != "root") print $1; exit;}')
 
 # Run the daemon as the target user
-su - $TARGET_USER -c /usr/bin/autoproxyd > /dev/null 2>&1 &
+su - $TARGET_USER -c /opt/homebrew/bin/autoproxyd > /dev/null 2>&1 &
 
 # Get the PID of the last background command
 APP_PID=$!

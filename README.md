@@ -1,8 +1,8 @@
-# IITJ Autoproxy (v0.1.1)
+# IITJ Autoproxy (v0.1.2)
 
 A CLI tool to automatically login to IIT Jodhpur's network firewall.
 
-#### (Currently only supports Windows and Linux)
+Supports Windows, Debian-based Linux distributions, Arch-based Linux distributions and MacOS.
 
 ### Installation 
 
@@ -16,9 +16,10 @@ A CLI tool to automatically login to IIT Jodhpur's network firewall.
 .\install.ps1
 ```
 
-This will install the autoproxy CLI and daemon in "C:\Program Files\IITJ Autoproxy\" and also add it to the PATH environmment variable.
+This will install the autoproxy CLI and daemon in "C:\Program Files\IITJ Autoproxy\" and also add it to the PATH environment variable.
 
 #### Debian-based Linux Distributions:
+
 - Run the following commands to install the package:
 
 ```
@@ -40,11 +41,33 @@ $ sudo autoproxyd-stop
 ```
 
 #### Arch-based Linux Distributions:
+
 - Install the [AUR package](https://aur.archlinux.org/packages/iitj-autoproxy-bin/) using your favourite AUR helper.
 
 For example, using `yay`:
 ```
 $ yay -S iitj-autoproxy-bin
+```
+
+- Start the daemon service:
+
+```
+$ sudo autoproxyd-start
+```
+
+- To stop the daemon service, run the following command:
+
+```
+$ sudo autoproxyd-stop
+```
+
+#### MacOS:
+
+- Install homebrew if you haven't already. Instructions [here](https://brew.sh/).
+- Run the following command to install the package:
+
+```
+$ brew install XanderWatson/iitj-autoproxy/iitj-autoproxy
 ```
 
 - Start the daemon service:
@@ -89,5 +112,3 @@ Note: You need to be logged out before running the above command.
 ```
 $ autoproxy logout
 ```
-
-#### Support for other operating systems coming soon :)

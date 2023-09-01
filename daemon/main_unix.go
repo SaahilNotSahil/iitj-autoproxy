@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 
 	"github.com/spf13/viper"
@@ -70,7 +71,13 @@ func initConfig() {
 		log.Fatal(err)
 	}
 
-	baseConfigPath := "/etc/iitj-autoproxy/autoproxy.config"
+	var baseConfigPath string
+
+	if runtime.GOOS == "darwin" {
+		baseConfigPath = "/opt/homebrew/etc/iitj-autoproxy/autoproxy.config"
+	} else {
+		baseConfigPath = "/etc/iitj-autoproxy/autoproxy.config"
+	}
 
 	configName := ".autoproxy.config"
 
