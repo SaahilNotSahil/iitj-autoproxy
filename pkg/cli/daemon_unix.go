@@ -1,4 +1,3 @@
-//go:build linux || darwin && cgo
 // +build linux darwin,cgo
 
 package cli
