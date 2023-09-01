@@ -1,0 +1,79 @@
+builds:
+  - main: ./cli
+    id: "cli"
+    binary: ./bin/autoproxy
+    goos:
+      - darwin
+    goarch:
+      - arm64
+    env:
+      - CGO_ENABLED=1
+      - >-
+        {{- if eq .Os "darwin" }}
+          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
+        {{- end }}
+    flags:
+      - -mod=vendor
+
+  - main: ./daemon
+    id: "daemon"
+    binary: ./bin/autoproxyd
+    goos:
+      - darwin
+    goarch:
+      - arm64
+    env:
+      - CGO_ENABLED=1
+      - >-
+        {{- if eq .Os "darwin" }}
+          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
+        {{- end }}
+    flags:
+      - -mod=vendor
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  prerelease: auto
+  github:
+    owner: XanderWatson
+    name: iitj-autoproxy
+  name_template: "{{.ProjectName}}-v{{.Version}}"
+  extra_files:
+    - glob: autoproxy.config
+
+archives:
+  - wrap_in_directory: false
+    files:
+      - LICENSE
+      - README.md
+      - autoproxy.config
+      - scripts/*
+
+brews:
+  - name: iitj-autoproxy
+    url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    download_strategy: CurlDownloadStrategy
+    commit_author:
+      name: XanderWatson
+      email: saahil_bhavsar@outlook.com
+    commit_msg_template: "Brew formula update for iitj-autoproxy version {{ .Tag }}"
+    caveats: "How to use this binary"
+    homepage: "https://github.com/XanderWatson/iitj-autoproxy"
+    description: "A CLI tool to automatically login to IIT Jodhpur's network firewall."
+    license: "MIT"
+    skip_upload: false
+    install: |
+      bin.install "bin/autoproxy"
+      bin.install "bin/autoproxyd"
+    post_install: |
+        etc.install "autoproxy.config"
+        etc.install "LICENSE"
+        etc.install "README.md"
+    repository:
+      owner: XanderWatson
+      name: homebrew-iitj-autoproxy
+      branch: main
+      pull_request:
+        enabled: false

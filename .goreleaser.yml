@@ -5,29 +5,16 @@ builds:
     goos:
       - linux
       - windows
-      - darwin
     goarch:
       - amd64
-      - arm64
     env:
-      - CGO_ENABLED=1
+      - CGO_ENABLED=0
       - >-
-        {{- if eq .Os "darwin" }}
-          {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
-          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
-        {{- end }}
         {{- if eq .Os "windows" }}
           {{- if eq .Arch "amd64" }}CC=x86_64-w64-mingw32-gcc{{- end }}
         {{- end }}
     flags:
       - -mod=vendor
-    ignore:
-      - goos: windows
-        goarch: arm64
-      - goos: darwin
-        goarch: amd64
-      - goos: linux
-        goarch: arm64
 
   - main: ./daemon
     id: "daemon"
@@ -35,29 +22,16 @@ builds:
     goos:
       - linux
       - windows
-      - darwin
     goarch:
       - amd64
-      - arm64
     env:
-      - CGO_ENABLED=1
+      - CGO_ENABLED=0
       - >-
-        {{- if eq .Os "darwin" }}
-          {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
-          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
-        {{- end }}
         {{- if eq .Os "windows" }}
           {{- if eq .Arch "amd64" }}CC=x86_64-w64-mingw32-gcc{{- end }}
         {{- end }}
     flags:
       - -mod=vendor
-    ignore:
-      - goos: windows
-        goarch: arm64
-      - goos: darwin
-        goarch: amd64
-      - goos: linux
-        goarch: arm64
 
 checksum:
   name_template: "checksums.txt"
@@ -155,30 +129,3 @@ archives:
       - scripts/*
       - install.ps1
       - autoproxy-uninstall.ps1
-
-brews:
-  - name: iitj-autoproxy
-    url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-    download_strategy: CurlDownloadStrategy
-    commit_author:
-      name: XanderWatson
-      email: saahil_bhavsar@outlook.com
-    commit_msg_template: "Brew formula update for iitj-autoproxy version {{ .Tag }}"
-    caveats: "How to use this binary"
-    homepage: "https://github.com/XanderWatson/iitj-autoproxy"
-    description: "A CLI tool to automatically login to IIT Jodhpur's network firewall."
-    license: "MIT"
-    skip_upload: false
-    install: |
-      bin.install "bin/autoproxy"
-      bin.install "bin/autoproxyd"
-    post_install: |
-        etc.install "autoproxy.config"
-        etc.install "LICENSE"
-        etc.install "README.md"
-    repository:
-      owner: XanderWatson
-      name: homebrew-iitj-autoproxy
-      branch: main
-      pull_request:
-        enabled: false
