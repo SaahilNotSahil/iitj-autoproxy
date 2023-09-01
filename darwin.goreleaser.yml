@@ -53,13 +53,14 @@ brews:
     license: "MIT"
     skip_upload: false
     install: |
-        chmod +x darwin-install.sh
-        ./darwin-install.sh
-    post_install: |
-        mkdir -p /usr/share/licenses/iitj-autoproxy
-        mkdir -p /usr/share/doc/iitj-autoproxy
-        cp LICENSE /usr/share/licenses/iitj-autoproxy/LICENSE
-        cp README.md /usr/share/doc/iitj-autoproxy/README.md
+        bin.install "bin/autoproxyd"
+        bin.install "bin/autoproxy"
+
+        (etc/"iitj-autoproxy").install "autoproxy.config"
+
+        bin.install "scripts/darwin/daemon-start.sh" => "autoproxyd-start"
+        bin.install "scripts/darwin/daemon-stop.sh" => "autoproxyd-stop"
+        bin.install "scripts/darwin/login.sh" => "autoproxyd-login"
     repository:
       owner: XanderWatson
       name: homebrew-iitj-autoproxy
