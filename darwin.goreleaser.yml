@@ -23,17 +23,12 @@ builds:
     flags:
       - -mod=vendor
 
-checksum:
-  name_template: "checksums.txt"
-
 release:
   prerelease: auto
   github:
     owner: XanderWatson
     name: iitj-autoproxy
   name_template: "{{.ProjectName}}-v{{.Version}}"
-  extra_files:
-    - glob: autoproxy.config
 
 archives:
   - wrap_in_directory: false
