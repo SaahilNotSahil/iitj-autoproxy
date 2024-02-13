@@ -10,7 +10,7 @@ Supports Windows, Debian-based Linux distributions, Arch-based Linux distributio
 
 #### Windows:
 
-- Download the latest release from [here](https://github.com/XanderWatson/iitj-autoproxy/releases).
+- Download the latest release from [here](https://github.com/SaahilNotSahil/iitj-autoproxy/releases).
 - Unzip the file and open a powershell instance with administrator privileges in the unzipped directory:
 - Run the following script to install autoproxy:
 
@@ -25,7 +25,7 @@ This will install the autoproxy CLI and daemon in "C:\Program Files\IITJ Autopro
 - Run the following commands to install the package:
 
 ```
-$ curl -s https://packagecloud.io/install/repositories/XanderWatson/iitj-autoproxy/script.deb.sh?any=true | sudo bash
+$ curl -s https://packagecloud.io/install/repositories/SaahilNotSahil/iitj-autoproxy/script.deb.sh | sudo bash
 $ sudo apt update
 $ sudo apt install iitj-autoproxy
 ```
