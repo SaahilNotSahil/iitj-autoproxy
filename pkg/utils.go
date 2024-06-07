@@ -19,7 +19,9 @@ func Login(url string, username string, password string) error {
 		return err
 	}
 
-	loginPageURL := viper.GetString("login_base_url") + "fgtauth?" + token
+	loginBaseURL := viper.GetString("login_base_url")
+
+	loginPageURL := loginBaseURL + "fgtauth?" + token
 
 	res, err := http.Get(loginPageURL)
 	if err != nil {
@@ -40,7 +42,7 @@ func Login(url string, username string, password string) error {
 		magic = strs[0]
 	}
 
-	referer := viper.GetString("login_base_url") + "login?" + token
+	referer := loginBaseURL + "login?" + token
 
 	data := u.Values{}
 	data.Add("4Tredir", referer)
@@ -53,7 +55,7 @@ func Login(url string, username string, password string) error {
 
 	req, err := http.NewRequest(
 		"POST",
-		viper.GetString("login_base_url"),
+		loginBaseURL,
 		strings.NewReader(data.Encode()),
 	)
 	if err != nil {
@@ -94,14 +96,14 @@ func Login(url string, username string, password string) error {
 
 	viper.Set("token", token)
 
-	return nil
+	return viper.WriteConfig()
 }
 
 func Logout(token string) error {
 	url := viper.GetString("login_base_url") + "logout?" + token
 
 	_, err := http.Get(url)
-	
+
 	return err
 }
 

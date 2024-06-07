@@ -7,17 +7,16 @@ import (
 
 	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/daemon"
-	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/keystore"
 )
 
 func LoginCmd() {
 	err := viper.ReadInConfig()
 	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
+		pkg.Logger.Println("Error reading config file")
+		log.Println("Error reading config file")
 
 		err = daemon.SendMessageToCLI(
-			"Error reading config file. Please make sure the file exists and is valid",
+			"Error reading config file",
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -29,16 +28,16 @@ func LoginCmd() {
 		return
 	}
 
-	var username string
-	var password string
+	username := viper.GetString("username")
+	password := viper.GetString("password")
+	baseURL := viper.GetString("base_url")
 
-	username, err = keystore.Get("username")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
+	if username == "" || password == "" {
+		pkg.Logger.Println("Please configure the application using the config command")
+		log.Println("Please configure the application using the config command")
 
 		err = daemon.SendMessageToCLI(
-			err.Error(),
+			"Please configure the application using the config command",
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -50,25 +49,7 @@ func LoginCmd() {
 		return
 	}
 
-	password, err = keystore.Get("password")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
-
-		err = daemon.SendMessageToCLI(
-			err.Error(),
-		)
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Println(err)
-
-			return
-		}
-
-		return
-	}
-
-	err = pkg.Login(viper.GetString("base_url"), username, password)
+	err = pkg.Login(baseURL, username, password)
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Println(err)
@@ -93,11 +74,11 @@ func LoginCmd() {
 func LoginDummyCmd() {
 	err := viper.ReadInConfig()
 	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
+		pkg.Logger.Println("Error reading config file")
+		log.Println("Error reading config file")
 
 		err = daemon.SendMessageToCLI(
-			"Error reading config file. Please make sure the file exists and is valid",
+			"Error reading config file",
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -109,41 +90,9 @@ func LoginDummyCmd() {
 		return
 	}
 
-	_, err = keystore.Get("username")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
-
-		err = daemon.SendMessageToCLI(
-			err.Error(),
-		)
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Println(err)
-
-			return
-		}
-
-		return
-	}
-
-	_, err = keystore.Get("password")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
-
-		err = daemon.SendMessageToCLI(
-			err.Error(),
-		)
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Println(err)
-
-			return
-		}
-
-		return
-	}
+	_ = viper.GetString("username")
+	_ = viper.GetString("password")
+	_ = viper.GetString("base_url")
 
 	err = daemon.SendMessageToCLI("Dummy login successful")
 	if err != nil {

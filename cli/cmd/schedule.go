@@ -9,7 +9,9 @@ import (
 )
 
 func init() {
-	scheduleCmd.Flags().BoolVarP(&isDummy, "dummy", "d", false, "")
+	scheduleCmd.Flags().BoolVarP(
+		&isDummy, "dummy", "d", false, "Run a dummy version of the command",
+	)
 	rootCmd.AddCommand(scheduleCmd)
 }
 

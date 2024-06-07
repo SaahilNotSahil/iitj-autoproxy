@@ -127,6 +127,7 @@ archives:
       - README.md
       - autoproxy.config
       - scripts/*
+      - service_files/*
       - install.sh
       - install.ps1
       - autoproxy-uninstall.ps1

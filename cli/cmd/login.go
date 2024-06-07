@@ -9,7 +9,9 @@ import (
 )
 
 func init() {
-	loginCmd.Flags().BoolVarP(&isDummy, "dummy", "d", false, "")
+	loginCmd.Flags().BoolVarP(
+		&isDummy, "dummy", "d", false, "Run a dummy version of the command",
+	)
 	rootCmd.AddCommand(loginCmd)
 }
 
