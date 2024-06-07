@@ -8,7 +8,6 @@ import (
 	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/daemon"
 	ds "github.com/SaahilNotSahil/iitj-autoproxy/pkg/dummy/scheduler"
-	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/keystore"
 	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/scheduler"
 )
 
@@ -20,11 +19,11 @@ var (
 func ScheduleCmd() {
 	err := viper.ReadInConfig()
 	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
+		pkg.Logger.Println("Error reading config file")
+		log.Println("Error reading config file")
 
 		err = daemon.SendMessageToCLI(
-			"Error reading config file. Please make sure the file exists and is valid",
+			"Error reading config file",
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -34,16 +33,16 @@ func ScheduleCmd() {
 		return
 	}
 
-	var username string
-	var password string
+	username := viper.GetString("username")
+	password := viper.GetString("password")
+	baseURL := viper.GetString("base_url")
 
-	username, err = keystore.Get("username")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
+	if username == "" || password == "" {
+		pkg.Logger.Println("Please configure the application using the config command")
+		log.Println("Please configure the application using the config command")
 
 		err = daemon.SendMessageToCLI(
-			err.Error(),
+			"Please configure the application using the config command",
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -52,27 +51,9 @@ func ScheduleCmd() {
 
 		return
 	}
-
-	password, err = keystore.Get("password")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
-
-		err = daemon.SendMessageToCLI(
-			err.Error(),
-		)
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Println(err)
-		}
-
-		return
-	}
-
-	base_url := viper.GetString("base_url")
 
 	scheduler_running_state := scheduler.RunLoginScheduler(
-		base_url, username, password, kill,
+		baseURL, username, password, kill,
 	)
 	if !scheduler_running_state {
 		pkg.Logger.Println("Scheduler already running")
@@ -89,6 +70,18 @@ func ScheduleCmd() {
 
 		viper.Set("scheduler_running_state", scheduler_running_state)
 
+		err = viper.WriteConfig()
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			err = daemon.SendMessageToCLI(err.Error())
+			if err != nil {
+				pkg.Logger.Println(err)
+				log.Println(err)
+			}
+		}
+
 		err = daemon.SendMessageToCLI("Scheduler started")
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -100,59 +93,38 @@ func ScheduleCmd() {
 func ScheduleDummyCmd() {
 	err := viper.ReadInConfig()
 	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
+		pkg.Logger.Println("Error reading config file")
+		log.Println("Error reading config file")
 
 		err = daemon.SendMessageToCLI(
-			"Error reading config file. Please make sure the file exists and is valid",
+			"Error reading config file",
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
 			log.Println(err)
-
-			return
 		}
 
 		return
 	}
 
-	_, err = keystore.Get("username")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
-
-		err = daemon.SendMessageToCLI(
-			err.Error(),
-		)
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Println(err)
-
-			return
-		}
-
-		return
-	}
-
-	_, err = keystore.Get("password")
-	if err != nil {
-		pkg.Logger.Println(err)
-		log.Println(err)
-
-		err = daemon.SendMessageToCLI(
-			err.Error(),
-		)
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Println(err)
-
-			return
-		}
-
-		return
-	}
-
+	username := viper.GetString("username")
+	password := viper.GetString("password")
 	_ = viper.GetString("base_url")
+
+	if username == "" || password == "" {
+		pkg.Logger.Println("Please configure the application using the config command")
+		log.Println("Please configure the application using the config command")
+
+		err = daemon.SendMessageToCLI(
+			"Please configure the application using the config command",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+		}
+
+		return
+	}
 
 	scheduler_running_state := ds.RunLoginScheduler(killDummy)
 	if !scheduler_running_state {
@@ -170,6 +142,18 @@ func ScheduleDummyCmd() {
 
 		viper.Set("dummy_scheduler_running_state", scheduler_running_state)
 
+		err = viper.WriteConfig()
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			err = daemon.SendMessageToCLI(err.Error())
+			if err != nil {
+				pkg.Logger.Println(err)
+				log.Println(err)
+			}
+		}
+
 		err = daemon.SendMessageToCLI("Dummy scheduler started")
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -179,6 +163,24 @@ func ScheduleDummyCmd() {
 }
 
 func KillScheduler() {
+	err := viper.ReadInConfig()
+	if err != nil {
+		pkg.Logger.Println("Error reading config file")
+		log.Println("Error reading config file")
+
+		err = daemon.SendMessageToCLI(
+			"Error reading config file",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
+	}
+
 	if scheduler.SchedulerRunning {
 		pkg.Logger.Println("Stopping the scheduler...")
 		log.Println("Stopping the scheduler...")
@@ -193,11 +195,41 @@ func KillScheduler() {
 
 		viper.Set("scheduler_running_state", false)
 
+		err = viper.WriteConfig()
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			err = daemon.SendMessageToCLI(err.Error())
+			if err != nil {
+				pkg.Logger.Println(err)
+				log.Println(err)
+			}
+		}
+
 		kill <- true
 	}
 }
 
 func KillDummyScheduler() {
+	err := viper.ReadInConfig()
+	if err != nil {
+		pkg.Logger.Println("Error reading config file")
+		log.Println("Error reading config file")
+
+		err = daemon.SendMessageToCLI(
+			"Error reading config file",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
+	}
+
 	if ds.SchedulerRunning {
 		pkg.Logger.Println("Stopping the dummy scheduler...")
 		log.Println("Stopping the dummy scheduler...")
@@ -211,6 +243,18 @@ func KillDummyScheduler() {
 		ds.SchedulerRunning = false
 
 		viper.Set("dummy_scheduler_running_state", false)
+
+		err = viper.WriteConfig()
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			err = daemon.SendMessageToCLI(err.Error())
+			if err != nil {
+				pkg.Logger.Println(err)
+				log.Println(err)
+			}
+		}
 
 		killDummy <- true
 	}

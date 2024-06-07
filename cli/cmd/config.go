@@ -5,9 +5,8 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"golang.org/x/term"
-
-	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/keystore"
 )
 
 func init() {
@@ -30,7 +29,10 @@ var configCmd = &cobra.Command{
 		cobra.CheckErr(err)
 		password := string(bytePassword)
 
-		keystore.Set("username", username)
-		keystore.Set("password", password)
+		viper.Set("username", username)
+		viper.Set("password", password)
+		viper.Set("token", "")
+
+		cobra.CheckErr(viper.WriteConfig())
 	},
 }

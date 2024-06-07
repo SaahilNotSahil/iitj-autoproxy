@@ -9,7 +9,9 @@ import (
 )
 
 func init() {
-	logoutCmd.Flags().BoolVarP(&isDummy, "dummy", "d", false, "")
+	logoutCmd.Flags().BoolVarP(
+		&isDummy, "dummy", "d", false, "Run a dummy version of the command",
+	)
 	rootCmd.AddCommand(logoutCmd)
 }
 

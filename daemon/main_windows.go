@@ -9,6 +9,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"path"
 	"syscall"
 
 	"github.com/spf13/viper"
@@ -87,29 +88,30 @@ func initConfig() {
 
 	baseConfigPath := "C:/ProgramData/IITJ Autoproxy/autoproxy.config"
 
-	configName := ".autoproxy.config"
+	configName := ".autoproxyconfig"
+
+	targetConfig := path.Join(home, configName)
 
 	viper.AddConfigPath(home)
-
-	viper.SetConfigType("json")
 	viper.SetConfigName(configName)
+	viper.SetConfigType("json")
 
-	err = viper.ReadInConfig()
+	_, err = os.Stat(targetConfig)
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Println(err)
 
-		_, err = copy(baseConfigPath, home+"/"+configName)
+		_, err = copy(baseConfigPath, targetConfig)
 		if err != nil {
 			pkg.Logger.Println(err)
 			log.Fatal(err)
 		}
+	}
 
-		err = viper.ReadInConfig()
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Fatal(err)
-		}
+	err = viper.ReadInConfig()
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Fatal(err)
 	}
 }
 
@@ -130,7 +132,7 @@ func cleanup() {
 func copy(src, dst string) (int64, error) {
 	sourceFileStat, err := os.Stat(src)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to stat source file %s: %w", src, err)
 	}
 
 	if !sourceFileStat.Mode().IsRegular() {
@@ -139,15 +141,20 @@ func copy(src, dst string) (int64, error) {
 
 	source, err := os.Open(src)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to open source file %s: %w", src, err)
 	}
 	defer source.Close()
 
-	destination, err := os.Create(dst)
+	destination, err := os.OpenFile(dst, os.O_RDWR|os.O_CREATE|os.O_TRUNC, sourceFileStat.Mode())
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to create destination file %s: %w", dst, err)
 	}
 	defer destination.Close()
 
-	return io.Copy(destination, source)
+	bytesCopied, err := io.Copy(destination, source)
+	if err != nil {
+		return 0, fmt.Errorf("failed to copy data from %s to %s: %w", src, dst, err)
+	}
+
+	return bytesCopied, nil
 }
