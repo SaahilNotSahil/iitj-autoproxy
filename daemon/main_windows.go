@@ -14,8 +14,8 @@ import (
 	"github.com/spf13/viper"
 	"gopkg.in/natefinch/npipe.v2"
 
-	"github.com/XanderWatson/iitj-autoproxy/daemon/commands"
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/daemon/commands"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 )
 
 func main() {
@@ -28,6 +28,12 @@ func main() {
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Fatal(err)
+	}
+
+	scheduler_running_state := viper.GetBool("scheduler_running_state")
+
+	if scheduler_running_state {
+		commands.ScheduleCmd()
 	}
 
 	buf := make([]byte, 1024)
@@ -57,10 +63,16 @@ func execute(command string) {
 	switch command {
 	case "login":
 		commands.LoginCmd()
+	case "loginDummy":
+		commands.LoginDummyCmd()
 	case "logout":
 		commands.LogoutCmd()
+	case "logoutDummy":
+		commands.LogoutDummyCmd()
 	case "schedule":
 		commands.ScheduleCmd()
+	case "scheduleDummy":
+		commands.ScheduleDummyCmd()
 	case "hc":
 		commands.HealthCheckCmd()
 	}

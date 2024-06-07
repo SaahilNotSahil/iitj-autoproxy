@@ -1,0 +1,57 @@
+name: packagecloud
+
+on:
+  workflow_run:
+    workflows: ["goreleaser"]
+    types:
+      - completed
+
+jobs:
+  packagecloud:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: git fetch --force --tags
+      - run: cat VERSION
+      - run: echo "TAG=$(cat VERSION)" >> $GITHUB_ENV
+      - run: wget https://github.com/SaahilNotSahil/iitj-autoproxy/releases/download/${{ env.TAG }}/iitj-autoproxy_${{ env.TAG }}_linux_amd64.deb
+      - name: Upload package PackageCloud.io
+        uses: danielmundi/upload-packagecloud@v1
+        with:
+          packagecloud-token: ${{ secrets.PACKAGECLOUD_TOKEN }}
+          packagecloud-username: "SaahilNotSahil"
+          packagecloud-repo: "iitj-autoproxy"
+          package-name: iitj-autoproxy_${{ env.TAG }}_linux_amd64.deb
+          packagecloud-distrib: any/any
+
+      - run: wget https://github.com/SaahilNotSahil/iitj-autoproxy/releases/download/${{ env.TAG }}/iitj-autoproxy_${{ env.TAG }}_linux_arm64.deb
+      - name: Upload package PackageCloud.io
+        uses: danielmundi/upload-packagecloud@v1
+        with:
+          packagecloud-token: ${{ secrets.PACKAGECLOUD_TOKEN }}
+          packagecloud-username: "SaahilNotSahil"
+          packagecloud-repo: "iitj-autoproxy"
+          package-name: iitj-autoproxy_${{ env.TAG }}_linux_arm64.deb
+          packagecloud-distrib: any/any
+
+      - run: wget https://github.com/SaahilNotSahil/iitj-autoproxy/releases/download/${{ env.TAG }}/iitj-autoproxy_${{ env.TAG }}_linux_amd64.rpm
+      - name: Upload package PackageCloud.io
+        uses: danielmundi/upload-packagecloud@v1
+        with:
+          packagecloud-token: ${{ secrets.PACKAGECLOUD_TOKEN }}
+          packagecloud-username: "SaahilNotSahil"
+          packagecloud-repo: "iitj-autoproxy"
+          package-name: iitj-autoproxy_${{ env.TAG }}_linux_amd64.rpm
+          packagecloud-distrib: rpm_any/rpm_any
+
+      - run: wget https://github.com/SaahilNotSahil/iitj-autoproxy/releases/download/${{ env.TAG }}/iitj-autoproxy_${{ env.TAG }}_linux_arm64.rpm
+      - name: Upload package PackageCloud.io
+        uses: danielmundi/upload-packagecloud@v1
+        with:
+          packagecloud-token: ${{ secrets.PACKAGECLOUD_TOKEN }}
+          packagecloud-username: "SaahilNotSahil"
+          packagecloud-repo: "iitj-autoproxy"
+          package-name: iitj-autoproxy_${{ env.TAG }}_linux_arm64.rpm
+          packagecloud-distrib: rpm_any/rpm_any

@@ -1,0 +1,12 @@
+[Unit]
+Description=IITJ Autoproxy Daemon for user %i
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/autoproxyd
+User=%i
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

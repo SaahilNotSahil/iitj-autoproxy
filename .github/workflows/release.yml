@@ -24,7 +24,7 @@ jobs:
         with:
           distribution: goreleaser
           version: ${{ env.GITHUB_REF_NAME }}
-          args: release --clean
+          args: release --clean --config=.goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
           AUR_KEY: ${{ secrets.AUR_KEY }}

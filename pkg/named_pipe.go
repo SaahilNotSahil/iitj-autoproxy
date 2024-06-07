@@ -9,15 +9,15 @@ import (
 func GetCTDNamedPipe() string {
 	var pipeName string
 
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		Logger.Println(err)
-		log.Fatal(err)
-	}
-
 	if runtime.GOOS == "windows" {
 		pipeName = `\\.\pipe\autoproxy-ctd`
 	} else {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			Logger.Println(err)
+			log.Fatal(err)
+		}
+
 		pipeName = homeDir + "/autoproxy-ctd"
 	}
 
@@ -27,15 +27,15 @@ func GetCTDNamedPipe() string {
 func GetDTCNamedPipe() string {
 	var pipeName string
 
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		Logger.Println(err)
-		log.Fatal(err)
-	}
-
 	if runtime.GOOS == "windows" {
 		pipeName = `\\.\pipe\autoproxy-dtc`
 	} else {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			Logger.Println(err)
+			log.Fatal(err)
+		}
+
 		pipeName = homeDir + "/autoproxy-dtc"
 	}
 

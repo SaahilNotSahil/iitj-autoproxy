@@ -1,65 +1,93 @@
-# IITJ Autoproxy (v0.1.1)
+# IITJ Autoproxy (v0.1.2)
 
 A CLI tool to automatically login to IIT Jodhpur's network firewall.
 
-#### (Currently only supports Windows and Linux)
+## Installation 
 
-### Installation 
+### Windows:
 
-#### Windows:
+#### Scoop:
 
-- Download the latest release from [here](https://github.com/SaahilNotSahil/iitj-autoproxy/releases).
-- Unzip the file and open a powershell instance with administrator privileges in the unzipped directory:
-- Run the following script to install autoproxy:
+- First, you need to install [Scoop](https://scoop.sh/).
+- Next, run the following commands in PowerShell
 
+```shell
+scoop bucket add org https://github.com/SaahilNotSahil/scoop-iitj-autoproxy.git
+scoop install iitj-autoproxy
 ```
+
+#### From archive:
+
+- Download the latest release (`iitj-autoproxy_<version>_windows_amd64.zip`) from [here](https://github.com/SaahilNotSahil/iitj-autoproxy/releases).
+- Extract the zip file.
+- Open Powershell as administrator and run the following commands
+
+```shell
+cd <path-to-extracted-folder>
 .\install.ps1
 ```
 
-This will install the autoproxy CLI and daemon in "C:\Program Files\IITJ Autoproxy\" and also add it to the PATH environmment variable.
+- IITJ Autoproxy is now installed on your system in the `C:\Program Files\IITJ Autoproxy` directory, and is added to the PATH.
 
-#### Debian-based Linux Distributions:
-- Run the following commands to install the package:
+### Linux:
 
-```
-$ curl -s https://packagecloud.io/install/repositories/SaahilNotSahil/iitj-autoproxy/script.deb.sh | sudo bash
-$ sudo apt update
-$ sudo apt install iitj-autoproxy
-```
+#### Debian-based Distros (Debian, Ubuntu, Linux Mint, etc.):
 
-- The daemon service will be started automatically. Incase it doesn't, run the following command:
+- You can install by running the following commands
 
-```
-$ sudo autoproxyd-start
+```bash
+curl -s https://packagecloud.io/install/repositories/SaahilNotSahil/iitj-autoproxy/script.deb.sh?any=true | sudo bash
+sudo apt update
+sudo apt install iitj-autoproxy
 ```
 
-- To stop the daemon service, run the following command:
+#### Arch-based Distros (Arch Linux, EndeavourOS, Manjaro, etc.):
 
-```
-$ sudo autoproxyd-stop
-```
+- Download the AUR package for IITJ Autoproxy:
+  (You can install it with your favourite AUR helper)
 
-#### Arch-based Linux Distributions:
-- Install the [AUR package](https://aur.archlinux.org/packages/iitj-autoproxy-bin/) using your favourite AUR helper.
-
-For example, using `yay`:
-```
-$ yay -S iitj-autoproxy-bin
+```bash
+yay -S iitj-autoproxy-bin
 ```
 
-- Start the daemon service:
+#### RHEL-based Distros (RHEL, Fedora, CentOS, etc.):
 
-```
-$ sudo autoproxyd-start
-```
+- You can install by running the following commands
 
-- To stop the daemon service, run the following command:
-
-```
-$ sudo autoproxyd-stop
+```shell
+curl -s https://packagecloud.io/install/repositories/SaahilNotSahil/iitj-autoproxy/script.rpm.sh?any=true | sudo bash
+sudo yum install iitj-autoproxy
 ```
 
-### Usage
+#### From archive:
+
+- Download the latest release (`iitj-autoproxy_<version>_linux_<amd64/arm64>.tar.gz`) from [here](https://github.com/SaahilNotSahil/iitj-autoproxy/releases).
+- Extract the `tar.gz` file and run the installer script
+```shell
+tar zxvf iitj-autoproxy_<version>_linux_<amd64/arm64>.tar.gz
+chmod +x install.sh
+./install.sh
+```
+- IITJ Autoproxy is now installed on your system in the `/usr/bin` directory, which is already in the PATH.
+
+### Mac:
+
+#### Homebrew:
+
+- You can install by running the following commands
+
+```shell
+brew tap SaahilNotSahil/iitj-autoproxy
+brew install iitj-autoproxy
+```
+
+- To upgrade the package:
+
+```shell
+brew upgrade iitj-autoproxy
+```
+
+## Usage
 
 - First, you need to set your username and password. To do so, run the following command:
 
@@ -89,5 +117,3 @@ Note: You need to be logged out before running the above command.
 ```
 $ autoproxy logout
 ```
-
-#### Support for other operating systems coming soon :)

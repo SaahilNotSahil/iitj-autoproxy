@@ -3,11 +3,11 @@ package commands
 import (
 	"log"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
-	"github.com/XanderWatson/iitj-autoproxy/pkg/daemon"
-	"github.com/XanderWatson/iitj-autoproxy/pkg/keystore"
-
 	"github.com/spf13/viper"
+
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/daemon"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/keystore"
 )
 
 func LoginCmd() {
@@ -29,13 +29,16 @@ func LoginCmd() {
 		return
 	}
 
-	username, err := keystore.Get("username")
+	var username string
+	var password string
+
+	username, err = keystore.Get("username")
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Println(err)
 
 		err = daemon.SendMessageToCLI(
-			"Error fetching the username from the OS keyring",
+			err.Error(),
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -47,13 +50,13 @@ func LoginCmd() {
 		return
 	}
 
-	password, err := keystore.Get("password")
+	password, err = keystore.Get("password")
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Println(err)
 
 		err = daemon.SendMessageToCLI(
-			"Error fetching the password from the OS keyring",
+			err.Error(),
 		)
 		if err != nil {
 			pkg.Logger.Println(err)
@@ -65,28 +68,7 @@ func LoginCmd() {
 		return
 	}
 
-	if username == "" || password == "" {
-		pkg.Logger.Println(
-			"Please configure the application using the config command",
-		)
-		log.Println(
-			"Please configure the application using the config command",
-		)
-
-		err = daemon.SendMessageToCLI(
-			"Please configure the application using the config command",
-		)
-		if err != nil {
-			pkg.Logger.Println(err)
-			log.Println(err)
-
-			return
-		}
-
-		return
-	}
-
-	err = daemon.Login(viper.GetString("base_url"), username, password)
+	err = pkg.Login(viper.GetString("base_url"), username, password)
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Println(err)
@@ -105,5 +87,69 @@ func LoginCmd() {
 			pkg.Logger.Println(err)
 			log.Println(err)
 		}
+	}
+}
+
+func LoginDummyCmd() {
+	err := viper.ReadInConfig()
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		err = daemon.SendMessageToCLI(
+			"Error reading config file. Please make sure the file exists and is valid",
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
+	}
+
+	_, err = keystore.Get("username")
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		err = daemon.SendMessageToCLI(
+			err.Error(),
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
+	}
+
+	_, err = keystore.Get("password")
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		err = daemon.SendMessageToCLI(
+			err.Error(),
+		)
+		if err != nil {
+			pkg.Logger.Println(err)
+			log.Println(err)
+
+			return
+		}
+
+		return
+	}
+
+	err = daemon.SendMessageToCLI("Dummy login successful")
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		return
 	}
 }

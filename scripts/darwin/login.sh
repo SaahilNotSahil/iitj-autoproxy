@@ -1,6 +1,6 @@
 #!/bin/bash
 
-AUTOPROXY_DIR=/usr/bin
+AUTOPROXY_DIR=/opt/homebrew/bin
 
 # Start the daemon and redirect output to a log file
 nohup $AUTOPROXY_DIR/autoproxyd > $HOME/autoproxyd.log &

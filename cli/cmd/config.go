@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg/keystore"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/keystore"
 )
 
 func init() {
@@ -20,6 +20,7 @@ var configCmd = &cobra.Command{
 	Long:  "Set the username and password for authentication",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Username:")
+
 		var username string
 		fmt.Scanln(&username)
 
@@ -27,11 +28,9 @@ var configCmd = &cobra.Command{
 
 		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 		cobra.CheckErr(err)
-
 		password := string(bytePassword)
 
-		cobra.CheckErr(keystore.Set("username", username))
-		cobra.CheckErr(keystore.Set("password", password))
-		cobra.CheckErr(keystore.Set("token", ""))
+		keystore.Set("username", username)
+		keystore.Set("password", password)
 	},
 }

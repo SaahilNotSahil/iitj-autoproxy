@@ -8,7 +8,7 @@ import (
 
 	"gopkg.in/natefinch/npipe.v2"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 )
 
 func CreateNamedPipeAndReceiveMessage(isHealthCheck bool) string {

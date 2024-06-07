@@ -4,12 +4,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var isDummy bool
+
 var rootCmd = &cobra.Command{
 	Use:   "autoproxy",
 	Short: "Use IITJ internet hassle-free",
 	Long: `A Fast CLI Autoproxy Tool built for IITJ fraternity. 
 	
-			With love, by XanderWatson.`,
+			With love, by SaahilNotSahil.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cobra.CheckErr(cmd.Help())
 	},

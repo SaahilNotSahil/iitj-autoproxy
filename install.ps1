@@ -11,6 +11,11 @@ $configDir = "."
 $installDir = "C:\Program Files\IITJ Autoproxy"
 $configInstallDir = "C:\ProgramData\IITJ Autoproxy"
 
+# Define service parameters
+$serviceName = "IITJAutoproxy"
+$displayName = "IITJ Autoproxy Daemon"
+$exePath = "$installDir\autoproxyd.exe"  # Update this if the executable has a different name
+
 # Create installation directories if they don't exist
 if (-Not (Test-Path $installDir)) {
     New-Item -Path $installDir -ItemType Directory
@@ -35,4 +40,12 @@ if (-Not ($envPath -like "*$installDir*")) {
     [Environment]::SetEnvironmentVariable("Path", $envPath + ";$installDir", [EnvironmentVariableTarget]::Machine)
 }
 
-Write-Host "Installation of IITJ Autoproxy completed successfully!"
+# Create the service
+Write-Host "Creating background service..."
+sc.exe create $serviceName binPath= "$exePath" DisplayName= "$displayName" start= auto type= own
+
+# Start the service
+Write-Host "Starting the service..."
+sc.exe start $serviceName
+
+Write-Host "Installation of IITJ Autoproxy and service setup completed successfully!"
