@@ -5,16 +5,27 @@ builds:
     goos:
       - linux
       - windows
+      - darwin
     goarch:
       - amd64
+      - arm64
     env:
       - CGO_ENABLED=0
       - >-
+        {{- if eq .Os "darwin" }}
+          {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
+          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
+        {{- end }}
         {{- if eq .Os "windows" }}
           {{- if eq .Arch "amd64" }}CC=x86_64-w64-mingw32-gcc{{- end }}
         {{- end }}
     flags:
       - -mod=vendor
+    ldflags:
+      - -X github.com/SaahilNotSahil/iitj-autoproxy/pkg.Version={{ .Version }}
+    ignore:
+      - goos: windows
+        goarch: arm64
 
   - main: ./daemon
     id: "daemon"
@@ -22,29 +33,41 @@ builds:
     goos:
       - linux
       - windows
+      - darwin
     goarch:
       - amd64
+      - arm64
     env:
       - CGO_ENABLED=0
       - >-
+        {{- if eq .Os "darwin" }}
+          {{- if eq .Arch "amd64"}}CC=o64-clang{{- end }}
+          {{- if eq .Arch "arm64"}}CC=aarch64-apple-darwin20.2-clang{{- end }}
+        {{- end }}
         {{- if eq .Os "windows" }}
           {{- if eq .Arch "amd64" }}CC=x86_64-w64-mingw32-gcc{{- end }}
         {{- end }}
     flags:
       - -mod=vendor
+    ldflags:
+      - -X github.com/SaahilNotSahil/iitj-autoproxy/pkg.Version={{ .Version }}
+    ignore:
+      - goos: windows
+        goarch: arm64
 
 checksum:
   name_template: "checksums.txt"
 
 nfpms:
   - package_name: iitj-autoproxy
-    vendor: XanderWatson
-    homepage: https://github.com/XanderWatson/iitj-autoproxy
+    vendor: SaahilNotSahil
+    homepage: https://github.com/SaahilNotSahil/iitj-autoproxy
     maintainer: Saahil Bhavsar <saahil_bhavsar@outlook.com>
     license: MIT
     formats:
       - deb
       - archlinux
+      - rpm
     release: "1"
     bindir: /usr
     contents:
@@ -60,28 +83,26 @@ nfpms:
         dst: /usr/bin/autoproxyd-start
       - src: ./scripts/linux/daemon-stop.sh
         dst: /usr/bin/autoproxyd-stop
-    scripts:
-      postinstall: ./scripts/linux/daemon-start.sh
+      - src: ./service_files/linux/autoproxyd@.service
+        dst: /etc/systemd/system/autoproxyd@.service
 
 release:
   prerelease: auto
   github:
-    owner: XanderWatson
+    owner: SaahilNotSahil
     name: iitj-autoproxy
   name_template: "{{.ProjectName}}-v{{.Version}}"
-  extra_files:
-    - glob: autoproxy.config
 
 aurs:
   - name: iitj-autoproxy-bin
-    homepage: https://github.com/XanderWatson/iitj-autoproxy
+    homepage: https://github.com/SaahilNotSahil/iitj-autoproxy
     license: MIT
     maintainers:
       - "Saahil Bhavsar <saahil_bhavsar@outlook.com>"
     contributors:
       - "Saahil Bhavsar <saahil_bhavsar@outlook.com>"
     commit_author:
-      name: XanderWatson
+      name: SaahilNotSahil
       email: saahil_bhavsar@outlook.com
     private_key: "{{ .Env.AUR_KEY }}"
     git_url: "ssh://aur@aur.archlinux.org/iitj-autoproxy-bin.git"
@@ -91,31 +112,10 @@ aurs:
       install -Dm755 "./scripts/linux/login.sh" "${pkgdir}/usr/bin/autoproxylogin"
       install -Dm755 "./scripts/linux/daemon-start.sh" "${pkgdir}/usr/bin/autoproxyd-start"
       install -Dm755 "./scripts/linux/daemon-stop.sh" "${pkgdir}/usr/bin/autoproxyd-stop"
+      install -Dm644 "./service_files/linux/autoproxyd@.service" "${pkgdir}/etc/systemd/system/autoproxyd@.service"
       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/iitj-autoproxy/LICENSE"
       install -Dm644 "./autoproxy.config" "${pkgdir}/etc/iitj-autoproxy/autoproxy.config"
       install -Dm644 "./README.md" "${pkgdir}/usr/share/doc/iitj-autoproxy/README.md"
-
-# chocolateys:
-#   - name: iitj-autoproxy
-#     owners: Saahil Bhavsar
-#     title: IITJ Autoproxy
-#     authors: Saahil Bhavsar
-#     project_url: https://github.com/XanderWatson/iitj-autoproxy
-#     url_template: "https://github.com/XanderWatson/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
-#     copyright: 2023 Saahil Bhavsar
-#     license_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/LICENSE
-#     require_license_acceptance: false
-#     project_source_url: https://github.com/XanderWatson/iitj-autoproxy
-#     docs_url: https://github.com/XanderWatson/iitj-autoproxy/blob/main/README.md
-#     bug_tracker_url: https://github.com/XanderWatson/iitj-autoproxy/issues
-#     summary: A CLI tool to automatically login to IIT Jodhpur's network firewall.
-#     description: |
-#       IITJ Autoproxy installer package.
-#       A CLI tool to automatically login to IIT Jodhpur's network firewall.
-#     release_notes: "https://github.com/XanderWatson/iitj-autoproxy/releases/tag/v{{ .Version }}"
-#     api_key: '{{ .Env.CHOCOLATEY_API_KEY }}'
-#     source_repo: "https://push.chocolatey.org/"
-#     skip_publish: false
 
 archives:
   - wrap_in_directory: false
@@ -127,5 +127,55 @@ archives:
       - README.md
       - autoproxy.config
       - scripts/*
+      - install.sh
       - install.ps1
       - autoproxy-uninstall.ps1
+
+brews:
+  - name: iitj-autoproxy
+    url_template: "https://github.com/SaahilNotSahil/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    download_strategy: CurlDownloadStrategy
+    commit_author:
+      name: SaahilNotSahil
+      email: saahil_bhavsar@outlook.com
+    commit_msg_template: "Brew formula update for iitj-autoproxy version {{ .Tag }}"
+    homepage: "https://github.com/SaahilNotSahil/iitj-autoproxy"
+    description: "A CLI tool to automatically login to IIT Jodhpur's network firewall."
+    license: "MIT"
+    skip_upload: false
+    service: |
+      run [opt_bin/"autoproxyd"]
+      keep_alive true
+    install: |
+        bin.install "bin/autoproxyd"
+        bin.install "bin/autoproxy"
+
+        (etc/"iitj-autoproxy").install "autoproxy.config"
+
+        bin.install "scripts/darwin/daemon-start.sh" => "autoproxyd-start"
+        bin.install "scripts/darwin/daemon-stop.sh" => "autoproxyd-stop"
+        bin.install "scripts/darwin/login.sh" => "autoproxylogin"
+    repository:
+      owner: SaahilNotSahil
+      name: homebrew-iitj-autoproxy
+      branch: main
+      pull_request:
+        enabled: false
+
+scoops:
+  - name: iitj-autoproxy
+    url_template: "https://github.com/SaahilNotSahil/iitj-autoproxy/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    commit_author:
+      name: SaahilNotSahil
+      email: saahil_bhavsar@outlook.com
+    commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+    homepage: "https://github.com/SaahilNotSahil/iitj-autoproxy"
+    description: "A CLI tool to automatically login to IIT Jodhpur's network firewall."
+    license: MIT
+    skip_upload: false
+    repository:
+      owner: SaahilNotSahil
+      name: scoop-iitj-autoproxy
+      branch: main
+      pull_request:
+        enabled: false
