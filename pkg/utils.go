@@ -1,7 +1,7 @@
-package daemon
+package pkg
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	u "net/url"
@@ -26,7 +26,7 @@ func Login(url string, username string, password string) error {
 		return err
 	}
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func Login(url string, username string, password string) error {
 		return err
 	}
 
-	body, err = ioutil.ReadAll(res.Body)
+	body, err = io.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
 		return err
@@ -101,11 +101,8 @@ func Logout(token string) error {
 	url := viper.GetString("login_base_url") + "logout?" + token
 
 	_, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	
+	return err
 }
 
 func GetToken(url string) (string, error) {
@@ -116,7 +113,7 @@ func GetToken(url string) (string, error) {
 		return "", err
 	}
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
 		return "", err
@@ -150,7 +147,7 @@ func GetCurrentKeepaliveToken() (string, error) {
 		return "", err
 	}
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return "", err
 	}

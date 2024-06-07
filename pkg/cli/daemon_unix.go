@@ -1,4 +1,4 @@
-//go:build linux || darwin && cgo
+//go:build linux || (darwin && cgo)
 // +build linux darwin,cgo
 
 package cli
@@ -8,7 +8,7 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 )
 
 func CreateNamedPipeAndReceiveMessage(isHealthCheck bool) string {
@@ -19,7 +19,7 @@ func CreateNamedPipeAndReceiveMessage(isHealthCheck bool) string {
 		if isHealthCheck {
 			return "Unhealthy"
 		}
-		
+
 		pkg.Logger.Println(err)
 		log.Fatal(err)
 	}

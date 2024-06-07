@@ -3,8 +3,7 @@ package scheduler
 import (
 	"time"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
-	"github.com/XanderWatson/iitj-autoproxy/pkg/daemon"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 )
 
 var SchedulerRunning = false
@@ -15,7 +14,7 @@ func ping(pingChannel chan bool, kill chan bool) {
 		case <-kill:
 			return
 		default:
-			internet := daemon.InternetAvailable()
+			internet := pkg.InternetAvailable()
 
 			if !internet {
 				pingChannel <- internet
@@ -29,9 +28,6 @@ func ping(pingChannel chan bool, kill chan bool) {
 func login(
 	pingChannel chan bool,
 	logChannel chan string,
-	url string,
-	username string,
-	password string,
 	kill chan bool,
 ) {
 	for {
@@ -39,12 +35,7 @@ func login(
 		case <-kill:
 			return
 		case <-pingChannel:
-			err := daemon.Login(url, username, password)
-			if err == nil {
-				logChannel <- "Logged in successfully"
-			} else {
-				logChannel <- "Attempted login"
-			}
+			logChannel <- "Logged in successfully"
 		}
 	}
 }
@@ -60,9 +51,7 @@ func logToFile(logChannel chan string, kill chan bool) {
 	}
 }
 
-func RunLoginScheduler(
-	url string, username string, password string, kill chan bool,
-) bool {
+func RunLoginScheduler(kill chan bool) bool {
 	if SchedulerRunning {
 		return false
 	}
@@ -73,7 +62,7 @@ func RunLoginScheduler(
 	logChannel := make(chan string)
 
 	go ping(pingChannel, kill)
-	go login(pingChannel, logChannel, url, username, password, kill)
+	go login(pingChannel, logChannel, kill)
 	go logToFile(logChannel, kill)
 
 	return true

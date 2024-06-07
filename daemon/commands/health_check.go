@@ -3,8 +3,8 @@ package commands
 import (
 	"log"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
-	"github.com/XanderWatson/iitj-autoproxy/pkg/daemon"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/daemon"
 )
 
 func HealthCheckCmd() {

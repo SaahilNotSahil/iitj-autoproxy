@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg/cli"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/cli"
 
 	"github.com/spf13/cobra"
 )

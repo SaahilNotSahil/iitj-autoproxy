@@ -3,12 +3,12 @@ package commands
 import (
 	"log"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
-	"github.com/XanderWatson/iitj-autoproxy/pkg/daemon"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/daemon"
 )
 
 func LogoutCmd() {
-	token, err := daemon.GetCurrentKeepaliveToken()
+	token, err := pkg.GetCurrentKeepaliveToken()
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Println(err)
@@ -37,7 +37,7 @@ func LogoutCmd() {
 		return
 	}
 
-	err = daemon.Logout(token)
+	err = pkg.Logout(token)
 	if err != nil {
 		pkg.Logger.Println(err)
 		log.Println(err)
@@ -59,4 +59,16 @@ func LogoutCmd() {
 
 		KillScheduler()
 	}
+}
+
+func LogoutDummyCmd() {
+	err := daemon.SendMessageToCLI("Dummy logout successful")
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Println(err)
+
+		return
+	}
+
+	KillDummyScheduler()
 }

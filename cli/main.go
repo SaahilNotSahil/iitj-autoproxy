@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/XanderWatson/iitj-autoproxy/cli/cmd"
+	"github.com/SaahilNotSahil/iitj-autoproxy/cli/cmd"
 )
 
 func main() {

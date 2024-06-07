@@ -3,12 +3,13 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg/cli"
-
 	"github.com/spf13/cobra"
+
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/cli"
 )
 
 func init() {
+	logoutCmd.Flags().BoolVarP(&isDummy, "dummy", "d", false, "")
 	rootCmd.AddCommand(logoutCmd)
 }
 
@@ -17,7 +18,14 @@ var logoutCmd = &cobra.Command{
 	Short: "Logout of your firewall authentication",
 	Long:  "Logout of your firewall authentication",
 	Run: func(cmd *cobra.Command, args []string) {
-		cobra.CheckErr(cli.SendCommandToDaemon("logout"))
-		fmt.Println(cli.CreateNamedPipeAndReceiveMessage(false))
+		if isDummy {
+			fmt.Println("Dummy logout invoked")
+
+			cobra.CheckErr(cli.SendCommandToDaemon("logoutDummy"))
+			fmt.Println(cli.CreateNamedPipeAndReceiveMessage(false))
+		} else {
+			cobra.CheckErr(cli.SendCommandToDaemon("logout"))
+			fmt.Println(cli.CreateNamedPipeAndReceiveMessage(false))
+		}
 	},
 }

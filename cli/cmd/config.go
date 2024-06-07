@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg/keystore"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg/keystore"
 )
 
 func init() {
@@ -19,14 +19,6 @@ var configCmd = &cobra.Command{
 	Short: "Configure the application",
 	Long:  "Set the username and password for authentication",
 	Run: func(cmd *cobra.Command, args []string) {
-		keys, _ := keystore.Keys()
-
-		if len(keys) >= 1 {
-			fmt.Println("Multiple usernames found in the OS keyring. Cleaning up...")
-
-			cobra.CheckErr(keystore.Reset())
-		}
-
 		fmt.Println("Username:")
 
 		var username string
@@ -38,6 +30,7 @@ var configCmd = &cobra.Command{
 		cobra.CheckErr(err)
 		password := string(bytePassword)
 
-		cobra.CheckErr(keystore.Set(username, password))
+		keystore.Set("username", username)
+		keystore.Set("password", password)
 	},
 }

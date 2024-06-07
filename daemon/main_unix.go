@@ -1,4 +1,4 @@
-//go:build linux || darwin && cgo
+//go:build linux || (darwin && cgo)
 // +build linux darwin,cgo
 
 package main
@@ -14,8 +14,8 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/XanderWatson/iitj-autoproxy/daemon/commands"
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/daemon/commands"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 )
 
 func main() {
@@ -39,6 +39,13 @@ func main() {
 	defer pipe.Close()
 
 	buf := make([]byte, 1024)
+
+	scheduler_running_state := viper.GetBool("scheduler_running_state")
+
+	if scheduler_running_state {
+		commands.ScheduleCmd()
+	}
+
 	for {
 		num_bytes, _ := pipe.Read(buf)
 		command := string(buf[:num_bytes])
@@ -55,10 +62,16 @@ func execute(command string) {
 	switch command {
 	case "login":
 		commands.LoginCmd()
+	case "loginDummy":
+		commands.LoginDummyCmd()
 	case "logout":
 		commands.LogoutCmd()
+	case "logoutDummy":
+		commands.LogoutDummyCmd()
 	case "schedule":
 		commands.ScheduleCmd()
+	case "scheduleDummy":
+		commands.ScheduleDummyCmd()
 	case "hc":
 		commands.HealthCheckCmd()
 	}

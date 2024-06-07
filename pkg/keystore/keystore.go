@@ -1,65 +1,53 @@
 package keystore
 
 import (
+	"errors"
 	"log"
+	"os"
 
-	"github.com/99designs/keyring"
+	"github.com/spf13/viper"
+
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 )
 
-var kr keyring.Keyring
-
 func init() {
-	kr, _ = keyring.Open(keyring.Config{
-		ServiceName: "iitj-autoproxy",
-		KeyCtlScope: "user",
-		KeyCtlPerm: 0600,
-	})
+	home, err := os.UserHomeDir()
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Fatal(err)
+	}
+
+	configName := ".autoproxy.config"
+
+	viper.AddConfigPath(home)
+
+	viper.SetConfigType("json")
+	viper.SetConfigName(configName)
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		pkg.Logger.Println(err)
+		log.Fatal(err)
+	}
 }
 
 func Get(key string) (string, error) {
-	item, err := kr.Get(key)
-	if err != nil {
-		return "", err
+	item := viper.GetString(key)
+	if item != "" {
+		return "", errors.New("Please set the value for " + key)
 	}
 
-	return string(item.Data), nil
+	return item, nil
 }
 
-func Set(key string, value string) error {
-	return kr.Set(keyring.Item{
-		Key:  key,
-		Data: []byte(value),
-	})
+func Set(key string, value string) {
+	viper.Set(key, value)
 }
 
-func Remove(key string) error {
-	return kr.Remove(key)
+func Remove(key string) {
+	viper.Set(key, "")
 }
 
-func Keys() ([]string, error) {
-	return kr.Keys()
-}
-
-func Reset() error {
-	keys, err := kr.Keys()
-	if err != nil {
-		log.Println(err)
-
-		return err
-	}
-
-	log.Println(keys)
-
-	for _, key := range keys {
-		log.Println("Removing key: ", key)
-
-		err := kr.Remove(key)
-		if err != nil {
-			log.Println(err)
-
-			return err
-		}
-	}
-
-	return nil
+func Keys() []string {
+	return viper.AllKeys()
 }

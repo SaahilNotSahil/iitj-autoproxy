@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/XanderWatson/iitj-autoproxy/pkg"
+	"github.com/SaahilNotSahil/iitj-autoproxy/pkg"
 )
 
 func SendMessageToCLI(message string) error {
